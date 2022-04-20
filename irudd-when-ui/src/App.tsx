@@ -13,7 +13,7 @@ let styles = {
 
 function App() {
     return (
-    <div className="container-fluid d-flex flex-column border border-success p-5">
+    <div className="container-fluid d-flex flex-column border border-success">
         <Header />
         <div className="flex-grow-1" style={styles.create}>
             <Create  />
