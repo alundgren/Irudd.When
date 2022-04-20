@@ -2,24 +2,22 @@ import Header from './Header';
 import Create from './Create';
 
 let styles = {
-    header: {
-        backgroundColor:'green',
-        fontSize: 25
-    }, 
     create: {
-        backgroundColor:'red'
+        
+    },
+    sel: {
+        width:"100%",
+        height:300
     }
 }
 
 function App() {
     return (
-    <div className="container-fluid d-flex flex-column">
-        <div style={styles.header}>
-            <Header />
-        </div>
+    <div className="container-fluid d-flex flex-column border border-success p-5">
+        <Header />
         <div className="flex-grow-1" style={styles.create}>
             <Create  />
-        </div>        
+        </div>     
     </div>        
     );
 }
