@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Container from 'react-bootstrap/Container';
-import SelectDateOrDateTime from './create-components/SelectDateOrDateTime'
+import EditEventDescription from './components/EditEventDescription';
+import SelectDateOrDateTime from './components/SelectDateOrDateTime'
 
 let wrapperStyle = {
-    gap: '10px'
+    gap: '15px'
 }
 
 let rowStyle = {
@@ -17,7 +17,9 @@ function Create() {
             <div className="d-flex" style={rowStyle}>
                 <SelectDateOrDateTime />
             </div>
-            <div style={rowStyle}>r2</div>
+            <div className="d-flex" style={rowStyle}>
+                <EditEventDescription />
+            </div>
             <div style={rowStyle}>r3</div>
         </form>
     );

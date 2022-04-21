@@ -1,6 +1,6 @@
 let containerStyle = {
     gap: '5px',
-    maxWidth:500
+    maxWidth:450
 }
 
 function SelectDateOrDateTime() {

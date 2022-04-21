@@ -1,5 +1,6 @@
-import Header from './Header';
-import Create from './Create';
+import Header from './Header'
+import Create from './Create'
+import PickEventTimes from './components/PickEventTimes'
 
 let styles = {
     create: {
@@ -13,12 +14,12 @@ let styles = {
 
 function App() {
     return (
-    <div className="container-fluid d-flex flex-column border border-success">
-        <Header />
-        <div className="flex-grow-1" style={styles.create}>
-            <Create  />
-        </div>     
-    </div>        
+        <div className="container-fluid d-flex flex-column border border-success">
+            <Header />
+            <div className="flex-grow-1" style={styles.create}>
+                <Create  />
+            </div>
+        </div>        
     );
 }
 
