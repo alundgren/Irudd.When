@@ -2,7 +2,6 @@ import InputAddonButton from './InputAddonButton'
 
 let containerStyle = {
     gap: '10px',
-    maxWidth:450
 }
 
 function PickEventParticipants() {

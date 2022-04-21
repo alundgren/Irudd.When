@@ -22,7 +22,6 @@ let calendarWithPlusIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" he
     </svg>
 
 function IconForButton({iconType}: ButtonIconType) {
-    let icon : JSX.Element
     if(iconType === 'addPerson')
         return addPersonIcon
     else if(iconType === 'removePerson' || iconType === 'removeTime')

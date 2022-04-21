@@ -1,22 +1,11 @@
 import Header from './Header'
 import Create from './Create'
-import PickEventTimes from './components/PickEventTimes'
-
-let styles = {
-    create: {
-        
-    },
-    sel: {
-        width:"100%",
-        height:300
-    }
-}
 
 function App() {
     return (
-        <div className="container-fluid d-flex flex-column border border-success">
+        <div className="container-fluid d-flex flex-column">
             <Header />
-            <div className="flex-grow-1" style={styles.create}>
+            <div className="flex-grow-1">
                 <Create  />
             </div>
         </div>        
