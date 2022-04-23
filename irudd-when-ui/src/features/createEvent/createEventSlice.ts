@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DateTime } from 'luxon'
 
-interface CreateEventState {
+export interface CreateEventState {
     description: string
     dateOnly: boolean
     participants: EventParticipant[]
