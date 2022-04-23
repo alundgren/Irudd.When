@@ -1,4 +1,4 @@
-import InputAddonButton from './InputAddonButton'
+import InputAddonButton from './../../../components/InputAddonButton'
 
 let containerStyle = {
     gap: '10px',

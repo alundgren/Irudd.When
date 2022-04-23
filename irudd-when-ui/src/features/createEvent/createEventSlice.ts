@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DateTime } from 'luxon'
 
 interface CreateEventState {
+    description: string
     dateOnly: boolean
     participants: EventParticipant[]
     dates: EventDate[]
@@ -17,13 +18,15 @@ interface EventDate {
     date: DateTime
 }
 
-const initialState : CreateEventState = { 
+//6 char random string of lower chase chars and ints
+const generateItemId = () => Math.random().toString(36).substring(2, 8)
+
+const initialState : CreateEventState = {
+    description: '',
     dateOnly: true,
     participants: [],
     dates: []
 }
-
-const generateItemId = () => Math.random().toString(36).substring(2, 8) //random string like nruam1
 
 const normalizeEventDate = (date: DateTime, dateOnly: boolean) => dateOnly 
     ? date.startOf('day')
@@ -50,9 +53,12 @@ const createEventSlice = createSlice({
         },
         removeDate(state, action: PayloadAction<string>) {
             state.dates = state.dates.filter(x => x.id !== action.payload)
+        },
+        setDescription(state, action: PayloadAction<string>) {
+            state.description = action.payload
         }
     }
 })
 
-export const { addParticipant, addDate, removeParticipant, removeDate } = createEventSlice.actions
-export default createEventSlice.reducer
+export const { addParticipant, addDate, removeParticipant, removeDate, setDescription } = createEventSlice.actions
+export const createEventSliceReducer = createEventSlice.reducer

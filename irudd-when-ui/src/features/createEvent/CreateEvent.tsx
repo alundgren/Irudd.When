@@ -13,7 +13,7 @@ let singleLineRowStyle = {
     height: '2em'
 }
 
-function Create() {
+function CreateEvent() {
     return (
         <form className="d-flex flex-grow-1 p-2 flex-column" style={wrapperStyle}>
             <div className="d-flex" style={singleLineRowStyle}>
@@ -39,5 +39,5 @@ function Create() {
     );
 }
 
-export default Create;
+export default CreateEvent;
 
