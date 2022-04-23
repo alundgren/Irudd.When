@@ -3,7 +3,7 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 
 let containerStyle = {
-    gap: '15px'
+    gap: 15
 }
 let logoStyle = {
     height: 45,

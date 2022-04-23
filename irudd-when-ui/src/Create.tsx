@@ -6,8 +6,7 @@ import PickEventTimes from './components/PickEventTimes';
 import SelectDateOrDateTime from './components/SelectDateOrDateTime'
 
 let wrapperStyle = {
-    gap: '15px',
-    maxWidth:450
+    gap: 30,
 }
 
 let singleLineRowStyle = {
@@ -16,7 +15,7 @@ let singleLineRowStyle = {
 
 function Create() {
     return (
-        <form className="d-flex p-2 flex-column" style={wrapperStyle}>
+        <form className="d-flex flex-grow-1 p-2 flex-column" style={wrapperStyle}>
             <div className="d-flex" style={singleLineRowStyle}>
                 <SelectDateOrDateTime />
             </div>
