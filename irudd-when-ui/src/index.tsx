@@ -1,18 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {Provider} from "react-redux";
-import {configureStore} from "@reduxjs/toolkit";
 import reportWebVitals from './reportWebVitals';
 import App from './App';
-import {createEventSliceReducer} from "./features/createEvent/createEventSlice";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {createStore} from "./store";
 
-const store = configureStore({
-    reducer: {
-        createEvent: createEventSliceReducer
-    }
-})
+const store = createStore();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
