@@ -1,4 +1,4 @@
-﻿import {configureStore} from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import {createEventSliceReducer} from "./features/createEvent/createEventSlice";
 
 export function createStore() {
