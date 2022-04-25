@@ -1,29 +1,35 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import EditEventDescription from "./EditEventDescription";
 import {Provider} from "react-redux";
 import {createStore} from "../../../store";
 import {setDescription} from "../createEventSlice";
-import {EnhancedStore} from "@reduxjs/toolkit";
+import userEvent from '@testing-library/user-event';
 
-function createTestStore() {
-    return createStore();
-}
+let store = createStore();
 
-let store : any;
-
-describe('foo', () => {
+describe('Edit description', () => {
     beforeEach(() => {
-        store = createTestStore();
+        store = createStore();
     });
-    
-    test('starts with placeholder', async () => {
-        store.dispatch(setDescription('Test description'))
-        const { findByText } = render(
+
+    test('setDescription action changes the value', () => {
+        store.dispatch(setDescription('Test description'));
+        render(
             <Provider store={store}>
                 <EditEventDescription />
             </Provider>
-        )        
-        await screen.findByDisplayValue('Test description')
-    });   
+        );
+        expect(screen.getByDisplayValue('Test description')).toBeInTheDocument();
+    });
+
+    test('changing the value dispatches setDescription', async () =>{
+        render(
+            <Provider store={store}>
+                <EditEventDescription />
+            </Provider>
+        );
+        const description = await screen.findByTestId('description');
+        userEvent.type(description, 'test123');
+        expect(store.getState().createEvent.description).toEqual('test123')
+    });
 });
