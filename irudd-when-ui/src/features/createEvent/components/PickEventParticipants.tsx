@@ -17,14 +17,28 @@ function PickEventParticipants() {
         dispatch(removeParticipant(id));
     };
 
-    const onAddParticipant = (evt: SyntheticEvent) => {
+    const dispatchAddParticipant = () => {
         dispatch(setNewParticipantName(''));
-        dispatch(addParticipant(newParticipantName));        
+        dispatch(addParticipant(newParticipantName));
+    }
+
+    const onAddParticipant = (evt: SyntheticEvent) => {
+        dispatchAddParticipant();
     };
 
     const onNewParticipantNameChanged = (evt : React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setNewParticipantName(evt.currentTarget.value));
     };
+
+    const onNewParticipantNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key !== 'Enter') {
+            return;
+        }
+        e.preventDefault();
+        if(e.currentTarget.value) {
+            dispatchAddParticipant();
+        }
+    };    
 
     let participantElements = participants.map(x => (
         <div className="input-group" data-testid="participantContainer">
@@ -40,7 +54,8 @@ function PickEventParticipants() {
             {participantElements}
             <div className="input-group">
                 <input type="text" className="form-control" placeholder="Namn på nästa deltagare" 
-                    data-testid="addInput" value={newParticipantName} onChange={onNewParticipantNameChanged} />
+                    data-testid="addInput" value={newParticipantName} onChange={onNewParticipantNameChanged} 
+                    onKeyDown={onNewParticipantNameKeyDown} />
                 <InputAddonButton iconType='addPerson' buttonType='secondary' 
                     testId="addButton" onClick={onAddParticipant} isDisabled={!newParticipantName} />
             </div>

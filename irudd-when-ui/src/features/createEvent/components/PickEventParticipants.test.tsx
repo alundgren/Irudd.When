@@ -12,7 +12,7 @@ describe('Pick event participants', () => {
         store = createStore();
     });
 
-    test('can add participants', async () => {
+    test('can add participants using add butto', async () => {
         render(
             <Provider store={store}>
                 <PickEventParticipants />
@@ -25,6 +25,18 @@ describe('Pick event participants', () => {
 
         expect(await screen.queryAllByTestId('participantContainer')).toHaveLength(1);
     });
+
+    test('can add participants using enter', async () => {
+        render(
+            <Provider store={store}>
+                <PickEventParticipants />
+            </Provider>
+        );
+        const addInput = await screen.findByTestId('addInput');
+        userEvent.type(addInput, 'Some person{enter}');
+
+        expect(await screen.queryAllByTestId('participantContainer')).toHaveLength(1);
+    });    
 
     test('name input is cleared after adding a participant', async () => {
         render(
