@@ -1,7 +1,7 @@
-import { SyntheticEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
-import { addParticipant, CreateEventState, removeParticipant, setNewParticipantName } from '../createEventSlice'
+import { addParticipant, CreateEventState, removeParticipant, setNewParticipantName, setParticipantName } from '../createEventSlice'
 import InputAddonButton from './../../../components/InputAddonButton'
 
 let containerStyle = {
@@ -38,11 +38,16 @@ function PickEventParticipants() {
         if(e.currentTarget.value) {
             dispatchAddParticipant();
         }
-    };    
+    };
+
+    const onParticipantNameChanged = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setParticipantName({ id: id, name: e.currentTarget.value }));
+    };
 
     let participantElements = participants.map(x => (
         <div className="input-group" data-testid="participantContainer">
-            <input type="text" className="form-control" value={x.name} />
+            <input type="text" className="form-control" value={x.name} onChange={(e) => onParticipantNameChanged(x.id, e)}
+                data-testid="editName" />
             <InputAddonButton iconType='removePerson' buttonType='danger' onClick={(e) => onRemoveParticipant(x.id, e)} 
                 testId="removeButton" />
          </div>

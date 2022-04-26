@@ -63,5 +63,19 @@ describe('Pick event participants', () => {
         userEvent.click(removeButton);
 
         expect(await screen.queryAllByTestId('participantContainer')).toHaveLength(0);
-    });    
+    });
+
+    test('can edit participants name', async () => {
+        store.dispatch(addParticipant('Some person'));
+        render(
+            <Provider store={store}>
+                <PickEventParticipants />
+            </Provider>
+        );
+        const editInput = await screen.findByTestId('editName') as HTMLInputElement;
+        userEvent.clear(editInput);
+        userEvent.type(editInput, 'Another name');
+
+        expect(store.getState().createEvent.participants[0].name).toBe('Another name');
+    });
 });

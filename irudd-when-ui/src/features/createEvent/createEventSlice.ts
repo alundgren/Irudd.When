@@ -61,9 +61,15 @@ const createEventSlice = createSlice({
         },
         setNewParticipantName(state, action: PayloadAction<string>) {
             state.newParticipantName = action.payload;
+        },
+        setParticipantName(state, action: PayloadAction<{id: string, name: string}>) {
+            let participant = state.participants.find(x => x.id === action.payload.id);
+            if(participant) {
+                participant.name = action.payload.name;
+            }
         }
     }
 })
 
-export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName } = createEventSlice.actions
+export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName } = createEventSlice.actions
 export const createEventSliceReducer = createEventSlice.reducer
