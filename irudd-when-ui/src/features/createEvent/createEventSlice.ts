@@ -4,6 +4,7 @@ import { DateTime } from 'luxon'
 export interface CreateEventState {
     description: string
     dateOnly: boolean
+    newParticipantName: string
     participants: EventParticipant[]
     dates: EventDate[]
 }
@@ -19,9 +20,10 @@ interface EventDate {
 }
 
 //6 char random string of lower chase chars and ints
-const generateItemId = () => Math.random().toString(36).substring(2, 8)
+const generateItemId = () => Math.random().toString(36).substring(2, 8);
 
 const initialState : CreateEventState = {
+    newParticipantName: '',
     description: '',
     dateOnly: true,
     participants: [],
@@ -40,10 +42,10 @@ const createEventSlice = createSlice({
             state.participants.push({ 
                 id: generateItemId(),
                 name: action.payload
-             })
+             });
         },
         removeParticipant(state, action: PayloadAction<string>) {
-            state.participants = state.participants.filter(x => x.id !== action.payload)
+            state.participants = state.participants.filter(x => x.id !== action.payload);
         },
         addDate(state, action: PayloadAction<DateTime>) {
             state.dates.push({ 
@@ -52,13 +54,16 @@ const createEventSlice = createSlice({
              })
         },
         removeDate(state, action: PayloadAction<string>) {
-            state.dates = state.dates.filter(x => x.id !== action.payload)
+            state.dates = state.dates.filter(x => x.id !== action.payload);
         },
         setDescription(state, action: PayloadAction<string>) {
-            state.description = action.payload
+            state.description = action.payload;
+        },
+        setNewParticipantName(state, action: PayloadAction<string>) {
+            state.newParticipantName = action.payload;
         }
     }
 })
 
-export const { addParticipant, addDate, removeParticipant, removeDate, setDescription } = createEventSlice.actions
+export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName } = createEventSlice.actions
 export const createEventSliceReducer = createEventSlice.reducer
