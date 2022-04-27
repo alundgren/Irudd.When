@@ -12,7 +12,7 @@ describe('Pick event participants', () => {
         store = createStore();
     });
 
-    test('can add participants using add butto', async () => {
+    test('can add participants using add button', async () => {
         render(
             <Provider store={store}>
                 <PickEventParticipants />
