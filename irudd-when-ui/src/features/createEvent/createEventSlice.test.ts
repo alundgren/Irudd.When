@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux'
-import { createEventSliceReducer, addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName } from './createEventSlice'
+import { createEventSliceReducer, addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName, setDate } from './createEventSlice'
 import { DateTime } from 'luxon'
 
 const createInitialState = () => ({
@@ -9,7 +9,6 @@ const createInitialState = () => ({
     participants: [],
     dates: []
 });
-
 
 test('should return the initial state', () => {
     expect(createEventSliceReducer(undefined, {} as AnyAction)).toEqual(createInitialState());
@@ -35,50 +34,40 @@ test('removeParticipant: participants with matching ids are removed', () => {
     expect(newState.participants[0].name).toBe('b');
 })
 
-test('addDate: added date when date only should not have time removed', () => {
-    let newDate = DateTime.local(2022, 12, 24, 16, 45, 30, 25);
-    let state = {
-        ...createInitialState(),
-        dateOnly: true
-    };
-    let newState = createEventSliceReducer(state, addDate(newDate));
-    expect(newState.dates[0].date).toEqual(DateTime.local(2022, 12, 24));
-})
-
-test('addDate: added date when date and time should not have seconds and milliseconds removed', () => {    
-    let newDate = DateTime.local(2022, 12, 24, 16, 45, 30, 25);
-    let state = {
-        ...createInitialState(),
-        dateOnly: false
-    };
-    let newState = createEventSliceReducer(state, addDate(newDate));
-    expect(newState.dates[0].date).toEqual(DateTime.local(2022, 12, 24, 16, 45));
-})
-
 test('addDate: added date should have generated id', () => {
-    let newState = createEventSliceReducer(createInitialState(), addDate(DateTime.now()));
+    let newState = createEventSliceReducer(createInitialState(), addDate('2022-12-12'));
     expect(newState.dates[0].id).toBeTruthy();
-})
+});
 
 test('removeDate: dates with matching ids are removed', () => {
     let initialState = { 
         ...createInitialState(),
-        dates: [{ date: DateTime.now(), id: 'x' }, { date: DateTime.now(), id: 'y' }]
+        dates: [{ date: '2022-12-12', id: 'x' }, { date: '2022-12-20', id: 'y' }]
     };
     let newState = createEventSliceReducer(initialState, removeDate('x'));
 
     expect(newState.dates[0].id).toBe('y');
-})
+});
+
+test('setDate: should change the date with matching id', () => {
+    let initialState = { 
+        ...createInitialState(),
+        dates: [{ date: '2022-12-12', id: 'x' }, { date: '2022-12-20', id: 'y' }]
+    };
+    let newState = createEventSliceReducer(initialState, setDate({ id: 'y', date: '2022-12-21' }));
+
+    expect(newState.dates[1].date).toBe('2022-12-21');
+});
 
 test('setDescription: should change the description', () => {
     let newState = createEventSliceReducer(createInitialState(), setDescription('test'));
     expect(newState.description).toEqual('test');
-})
+});
 
 test('setNewParticipantName: should change the new participant name', () => {
     let newState = createEventSliceReducer(createInitialState(), setNewParticipantName('test'));
     expect(newState.newParticipantName).toEqual('test');
-})
+});
 
 test('setParticipantName: should edit matching by id', () => {
     let state = {
@@ -87,4 +76,4 @@ test('setParticipantName: should edit matching by id', () => {
     };    
     let newState = createEventSliceReducer(state, setParticipantName({ id: '2', name: 'bar2' }));
     expect(newState.participants[1].name).toBe('bar2');
-})
+});

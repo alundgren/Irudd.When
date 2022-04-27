@@ -45,7 +45,7 @@ function PickEventParticipants() {
     };
 
     let participantElements = participants.map(x => (
-        <div className="input-group" data-testid="participantContainer">
+        <div key={x.id} className="input-group" data-testid="participantContainer">
             <input type="text" className="form-control" value={x.name} onChange={(e) => onParticipantNameChanged(x.id, e)}
                 data-testid="editName" />
             <InputAddonButton iconType='removePerson' buttonType='danger' onClick={(e) => onRemoveParticipant(x.id, e)} 

@@ -16,7 +16,7 @@ interface EventParticipant {
 
 interface EventDate {
     id: string
-    date: DateTime
+    date: string
 }
 
 //6 char random string of lower chase chars and ints
@@ -29,10 +29,6 @@ const initialState : CreateEventState = {
     participants: [],
     dates: []
 }
-
-const normalizeEventDate = (date: DateTime, dateOnly: boolean) => dateOnly 
-    ? date.startOf('day')
-    : date.startOf('minute')
 
 const createEventSlice = createSlice({
     name: 'createEvent',
@@ -47,14 +43,20 @@ const createEventSlice = createSlice({
         removeParticipant(state, action: PayloadAction<string>) {
             state.participants = state.participants.filter(x => x.id !== action.payload);
         },
-        addDate(state, action: PayloadAction<DateTime>) {
+        addDate(state, action: PayloadAction<string>) {
             state.dates.push({ 
                 id: generateItemId(),
-                date: normalizeEventDate(action.payload, state.dateOnly)
+                date: action.payload
              })
         },
         removeDate(state, action: PayloadAction<string>) {
             state.dates = state.dates.filter(x => x.id !== action.payload);
+        },
+        setDate(state, action: PayloadAction<{id: string, date: string}>) {
+            let date = state.dates.find(x => x.id === action.payload.id);
+            if(date) {
+                date.date = action.payload.date;
+            }            
         },
         setDescription(state, action: PayloadAction<string>) {
             state.description = action.payload;
@@ -71,5 +73,5 @@ const createEventSlice = createSlice({
     }
 })
 
-export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName } = createEventSlice.actions
+export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName, setDate } = createEventSlice.actions
 export const createEventSliceReducer = createEventSlice.reducer
