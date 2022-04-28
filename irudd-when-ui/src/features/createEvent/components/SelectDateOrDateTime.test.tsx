@@ -20,7 +20,7 @@ describe('select date or date and time', () => {
             </Provider>
         );
         const dateAndTimeInput = (await screen.findByTestId('dateAndTimeInput')) as HTMLInputElement;
-        dateAndTimeInput.click();
+        userEvent.click(dateAndTimeInput);
         expect(store.getState().createEvent.dateOnly).toBe(false);
     });
 
@@ -32,7 +32,7 @@ describe('select date or date and time', () => {
             </Provider>
         );
         const dateAndTimeInput = (await screen.findByTestId('dateOnlyInput')) as HTMLInputElement;
-        dateAndTimeInput.click();
+        userEvent.click(dateAndTimeInput);
         expect(store.getState().createEvent.dateOnly).toBe(true);
     });    
 });
