@@ -8,7 +8,7 @@ export class DateService {
         this.isValid = this.isValid.bind(this);
     }
 
-    private getDateFormat() {
+    getDateFormat() {
         //TODO: Localize
         return this.dateOnly ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm';
     }

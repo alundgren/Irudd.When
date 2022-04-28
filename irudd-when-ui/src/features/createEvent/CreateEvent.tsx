@@ -1,8 +1,6 @@
-import React from 'react';
-
 import EditEventDescription from './components/EditEventDescription';
 import PickEventParticipants from './components/PickEventParticipants';
-import PickEventTimes from './components/PickEventTimes';
+import PickEventDates from './components/PickEventDates';
 import SelectDateOrDateTime from './components/SelectDateOrDateTime'
 
 let wrapperStyle = {
@@ -15,7 +13,7 @@ let singleLineRowStyle = {
 
 function CreateEvent() {
     return (
-        <form className="d-flex flex-grow-1 p-2 flex-column" style={wrapperStyle}>
+        <form className="d-flex flex-grow-1 p-2 flex-column" style={wrapperStyle} noValidate={true}>
             <div className="d-flex" style={singleLineRowStyle}>
                 <SelectDateOrDateTime />
             </div>
@@ -29,7 +27,7 @@ function CreateEvent() {
             </div>
             <div className="d-flex flex-grow-1">
                 <div className="flex-grow-1">
-                    <PickEventTimes />
+                    <PickEventDates />
                 </div>                
             </div>            
             <div className="d-flex justify-content-end mt-2">
