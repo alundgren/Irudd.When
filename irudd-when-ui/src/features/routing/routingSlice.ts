@@ -48,6 +48,15 @@ export function inferPageFromPathName(pathName: string) : RoutingPage | null {
 //TODO: How to mock in tests?
 export function useNavigate(dispatch: Dispatch<AnyAction>) : (route: RoutingPage) => void {
     if(!window.onpopstate) {
+        const gotoCreate = ()  => {
+            //Reset create
+            //dispatch route event
+        };
+        const gotoEvent = (id: string) => {
+            //new EventService()
+            //load event
+            //dispatch events to current event and route
+        }
         window.onpopstate = (event) => {
             let page = inferPageFromPathName(window.location.pathname);
             if(page) {

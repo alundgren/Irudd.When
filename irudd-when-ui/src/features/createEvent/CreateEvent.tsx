@@ -9,6 +9,7 @@ import { I18nState } from '../i18n/i18nSlice';
 import React from 'react';
 import { useNavigate } from '../routing/routingSlice';
 import { useDispatch } from 'react-redux';
+import { EventService } from '../../services/EventService';
 
 let wrapperStyle = {
     gap: 30,
@@ -39,8 +40,12 @@ function CreateEvent() {
     const dispatch = useDispatch();
     const navigate = useNavigate(dispatch);
     const onCreateClicked = (e: React.SyntheticEvent) => {
-        //TODO: Generate new id for the created event, store it and then route to it.
-        navigate({ pageName: 'event', pageData: '424344' });
+        //TODO: Set a saving state here while waiting. Can we get this into a side effect somehow? This feels sketchy.
+        //TODO: Regardless move this code out of the component
+        let eventService = new EventService();
+        eventService.createNewEvent(create).then(x => {
+            navigate({ pageName: 'event', pageData: x.id });
+        })        
     };
 
     return (
