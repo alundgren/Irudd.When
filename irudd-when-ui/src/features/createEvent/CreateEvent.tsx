@@ -6,6 +6,9 @@ import { CreateEventState } from './createEventSlice';
 import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
+import React from 'react';
+import { useNavigate } from '../routing/routingSlice';
+import { useDispatch } from 'react-redux';
 
 let wrapperStyle = {
     gap: 30,
@@ -33,6 +36,13 @@ function CreateEvent() {
         isValid = false;
     }
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate(dispatch);
+    const onCreateClicked = (e: React.SyntheticEvent) => {
+        //TODO: Generate new id for the created event, store it and then route to it.
+        navigate({ pageName: 'event', pageData: '424344' });
+    };
+
     return (
         <form className="d-flex flex-grow-1 p-2 flex-column" style={wrapperStyle} noValidate={true}>
             <div className="d-flex" style={singleLineRowStyle}>
@@ -52,7 +62,7 @@ function CreateEvent() {
                 </div>                
             </div>            
             <div className="d-flex justify-content-end mt-2">
-                <button className="btn btn-outline-primary" disabled={!isValid}>Skapa</button>
+                <button className="btn btn-outline-primary" disabled={!isValid} onClick={onCreateClicked}>Skapa</button>
             </div>           
         </form>
     );

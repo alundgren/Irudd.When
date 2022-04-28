@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction, createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 
 export interface RoutingState {
     current: RoutingPage
@@ -42,6 +42,36 @@ export function inferPageFromPathName(pathName: string) : RoutingPage | null {
         return { pageName: 'event', pageData: p.substring(7) }
     }
     return null;
+}
+
+//TODO: Switch to some known and tested standard solution after learning a bit about the history api
+//TODO: How to mock in tests?
+export function useNavigate(dispatch: Dispatch<AnyAction>) : (route: RoutingPage) => void {
+    if(!window.onpopstate) {
+        window.onpopstate = (event) => {
+            let page = inferPageFromPathName(window.location.pathname);
+            if(page) {
+                dispatch(setRoute(page));
+            } else {
+                dispatch(setRoute({ pageName: 'notfound' }));
+            }            
+        };
+    }
+    return route => {
+        if(route.pageName === 'create') {
+            window.history.pushState(route, '', '/');
+            dispatch(setRoute(route));
+            window.history.forward();
+        } else if(route.pageName === 'event') {
+            window.history.pushState(route, '', `/event/${route.pageData}`);
+            dispatch(setRoute(route));
+            window.history.forward();
+        } else {
+            window.history.pushState(route, '', `/notfound`);
+            dispatch(setRoute({ pageName: 'notfound' }));
+            window.history.forward();
+        }
+    };
 }
 
 export const { setRoute } = i18nSlice.actions;
