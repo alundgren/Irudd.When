@@ -1,5 +1,7 @@
 import Header from './Header'
 import Create from './features/createEvent/CreateEvent'
+import { RoutingState } from './features/routing/routingSlice';
+import { useSelector } from 'react-redux';
 
 let containerStyle = {
     maxWidth:450,
@@ -7,11 +9,21 @@ let containerStyle = {
 }
 
 function App() {
+    const currentRoute = useSelector((x : { routing: RoutingState}) => x.routing.current);
+    let body : JSX.Element;
+
+    if(currentRoute.pageName === 'create') {
+        body = <Create  />
+    } else {
+        //TODO: Prettify
+        body = <div>TODO: Länk till skapa ny</div>
+    }
+
     return (
         <div className="container-fluid d-flex flex-column mt-2" style={containerStyle}>
             <Header />
             <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-                <Create  />
+                {body}
             </div>
         </div>            
     );

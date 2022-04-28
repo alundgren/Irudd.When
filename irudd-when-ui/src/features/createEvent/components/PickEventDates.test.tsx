@@ -5,7 +5,6 @@ import {createStore} from "../../../store";
 import {addDate, setDateOnly} from "../createEventSlice";
 import PickEventDates from './PickEventDates';
 
-
 let store = createStore();
 
 describe('Pick event dates', () => {

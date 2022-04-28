@@ -5,8 +5,14 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {createStore} from "./store";
+import { inferPageFromPathName, setRoute } from './features/routing/routingSlice';
 
 const store = createStore();
+
+let initialPage = inferPageFromPathName(window.location.pathname) ?? {
+    pageName: 'noSuchPage'
+};
+store.dispatch(setRoute(initialPage));
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

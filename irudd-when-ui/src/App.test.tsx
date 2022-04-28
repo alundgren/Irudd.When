@@ -1,14 +1,24 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import { createStore } from './store';
+import { Provider } from 'react-redux';
 
-test('renders learn react link', () => {
-    expect(true)
-    //TODO: Add back in when we actually start integrating the ui
-    /*
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-  */
+let store = createStore();
+
+describe('App', () => {
+    beforeEach(() => {
+        store = createStore();
+    });
+
+    test('expect initial page to be create', async () => {
+        render(
+            <Provider store={store}>
+                <App />
+            </Provider>
+        );
+
+        const element = screen.getByText(/Ny händelse/i);
+
+        expect(element).toBeInTheDocument();
+    });
 });
-
