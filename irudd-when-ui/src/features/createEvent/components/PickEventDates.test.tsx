@@ -2,15 +2,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {Provider} from "react-redux";
 import {createStore} from "../../../store";
-import {addDate, setDate, removeDate} from "../createEventSlice";
+import {addDate, setDateOnly} from "../createEventSlice";
 import PickEventDates from './PickEventDates';
 
 
 let store = createStore();
 
-describe('Pick event times', () => {
+describe('Pick event dates', () => {
     beforeEach(() => {
         store = createStore();
+        store.dispatch(setDateOnly(true));
     });
 
     test('can add valid date using add button', async () => {

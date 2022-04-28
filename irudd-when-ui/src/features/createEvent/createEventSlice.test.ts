@@ -1,12 +1,11 @@
 import { AnyAction } from 'redux'
-import { createEventSliceReducer, addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName, setDate, setNewDate } from './createEventSlice'
-import { DateTime } from 'luxon'
+import { createEventSliceReducer, addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName, setDate, setNewDate, setDateOnly } from './createEventSlice'
 
 const createInitialState = () => ({
     newParticipantName: '',
     newDate: '',
     description: '',
-    dateOnly: true,
+    dateOnly: false,
     participants: [],
     dates: []
 });
@@ -83,3 +82,12 @@ test('setParticipantName: should edit matching by id', () => {
     let newState = createEventSliceReducer(state, setParticipantName({ id: '2', name: 'bar2' }));
     expect(newState.participants[1].name).toBe('bar2');
 });
+
+test('setDateOnly: should change dateOnly', () => {
+    let state = {
+        ...createInitialState(),
+        dateOnly: false
+    };
+    let newState = createEventSliceReducer(state, setDateOnly(true));
+    expect(newState.dateOnly).toBe(true);
+})

@@ -26,7 +26,7 @@ const initialState : CreateEventState = {
     newParticipantName: '',
     newDate: '',
     description: '',
-    dateOnly: true,
+    dateOnly: false,
     participants: [],
     dates: []
 }
@@ -73,9 +73,13 @@ const createEventSlice = createSlice({
         },
         setNewDate(state, action: PayloadAction<string>) {
             state.newDate = action.payload;
-        }        
+        },
+        setDateOnly(state, action: PayloadAction<boolean>) {
+            state.dateOnly = action.payload;
+        }
     }
 })
 
-export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, setParticipantName, setDate, setNewDate } = createEventSlice.actions
+export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, 
+    setParticipantName, setDate, setNewDate, setDateOnly } = createEventSlice.actions
 export const createEventSliceReducer = createEventSlice.reducer
