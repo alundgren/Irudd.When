@@ -22,9 +22,6 @@ interface ExistingEventDate {
     date: string
 }
 
-//6 char random string of lower chase chars and ints
-const generateItemId = () => Math.random().toString(36).substring(2, 8);
-
 const initialState : CurrentEventState = {
 
 }
@@ -35,9 +32,12 @@ const currentEventSlice = createSlice({
     reducers: {
         setCurrentEvent(state, action: PayloadAction<ExistingEvent>) {
             state.event = action.payload
+        },
+        clearCurrentEvent(state) {
+            state.event = undefined;
         }
     }
 });
 
-export const { setCurrentEvent } = currentEventSlice.actions;
+export const { setCurrentEvent, clearCurrentEvent } = currentEventSlice.actions;
 export const currentEventSliceReducer = currentEventSlice.reducer;

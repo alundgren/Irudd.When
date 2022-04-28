@@ -76,10 +76,13 @@ const createEventSlice = createSlice({
         },
         setDateOnly(state, action: PayloadAction<boolean>) {
             state.dateOnly = action.payload;
-        }
+        }, 
+        resetCreate(state) {
+            state = initialState;
+        }        
     }
 })
 
 export const { addParticipant, addDate, removeParticipant, removeDate, setDescription, setNewParticipantName, 
-    setParticipantName, setDate, setNewDate, setDateOnly } = createEventSlice.actions
+    setParticipantName, setDate, setNewDate, setDateOnly, resetCreate } = createEventSlice.actions
 export const createEventSliceReducer = createEventSlice.reducer

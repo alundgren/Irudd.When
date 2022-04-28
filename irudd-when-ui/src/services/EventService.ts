@@ -1,12 +1,10 @@
 import { CreateEventState } from "../features/createEvent/createEventSlice";
 import { ExistingEvent } from "../features/currentEvent/currentEventSlice";
 
+const MockDelayMs = 200;
+
 //TODO: Replace with an actual backend
 export class EventService {
-    constructor() {
-
-    }    
-
     createNewEvent(data: CreateEventState) : Promise<ExistingEvent> {
         const generateItemId = () => Math.random().toString(36).substring(2, 8);
         return new Promise<ExistingEvent>(resolve => {
@@ -23,7 +21,7 @@ export class EventService {
                 window.localStorage.setItem('event_' + eventId, JSON.stringify(event));
 
                 resolve(event);
-            }, 100);
+            }, MockDelayMs);
         });
     }
 
@@ -32,11 +30,12 @@ export class EventService {
             setTimeout(() => {
                 let rawData = window.localStorage.getItem('event_' + eventId);
                 if(rawData) {
+                    console.log(rawData)
                     resolve(JSON.parse(rawData));
                 } else {
                     resolve(null);
                 }                
-            }, 100);
+            }, MockDelayMs);
         });
     }
 }

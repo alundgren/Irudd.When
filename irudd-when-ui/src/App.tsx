@@ -2,6 +2,7 @@ import Header from './Header'
 import Create from './features/createEvent/CreateEvent'
 import { RoutingState } from './features/routing/routingSlice';
 import { useSelector } from 'react-redux';
+import {CurrentEvent} from "./features/currentEvent/CurrentEvent";
 
 let containerStyle = {
     maxWidth:450,
@@ -13,7 +14,9 @@ function App() {
     let body : JSX.Element;
 
     if(currentRoute.pageName === 'create') {
-        body = <Create  />
+        body = <Create  />;
+    } else if(currentRoute.pageName === 'event') {
+        body = <CurrentEvent />;
     } else {
         //TODO: Prettify
         body = <div>TODO: Länk till skapa ny</div>

@@ -1,4 +1,7 @@
 import { AnyAction, createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
+import {resetCreate} from "../createEvent/createEventSlice";
+import {EventService} from "../../services/EventService";
+import {clearCurrentEvent, setCurrentEvent} from "../currentEvent/currentEventSlice";
 
 export interface RoutingState {
     current: RoutingPage
@@ -35,7 +38,7 @@ export function inferPageFromPathName(pathName: string) : RoutingPage | null {
     if(p.endsWith('/')) {
         p = p.substring(0, p.length - 1);
     }
-    if(p == '' || p == 'create') {
+    if(p === '' || p === 'create') {
         return { pageName: 'create' }
     }
     if(p.startsWith('/event/')) {
@@ -47,16 +50,22 @@ export function inferPageFromPathName(pathName: string) : RoutingPage | null {
 //TODO: Switch to some known and tested standard solution after learning a bit about the history api
 //TODO: How to mock in tests?
 export function useNavigate(dispatch: Dispatch<AnyAction>) : (route: RoutingPage) => void {
+    const gotoCreate = ()  => {
+        dispatch(resetCreate());
+        dispatch(setRoute({ pageName: 'create' }));
+    };
+    const gotoEvent = (id: string) => {
+        const eventService = new EventService();
+        eventService.loadExistingEvent(id).then(x => {
+            if(x) {
+                dispatch(setCurrentEvent(x));
+            } else {
+                dispatch(clearCurrentEvent())
+            }
+            dispatch(setRoute({ pageName: 'event', pageData: id }));
+        })
+    }    
     if(!window.onpopstate) {
-        const gotoCreate = ()  => {
-            //Reset create
-            //dispatch route event
-        };
-        const gotoEvent = (id: string) => {
-            //new EventService()
-            //load event
-            //dispatch events to current event and route
-        }
         window.onpopstate = (event) => {
             let page = inferPageFromPathName(window.location.pathname);
             if(page) {
@@ -69,16 +78,16 @@ export function useNavigate(dispatch: Dispatch<AnyAction>) : (route: RoutingPage
     return route => {
         if(route.pageName === 'create') {
             window.history.pushState(route, '', '/');
-            dispatch(setRoute(route));
             window.history.forward();
-        } else if(route.pageName === 'event') {
+            gotoCreate();
+        } else if(route.pageName === 'event' && route.pageData) {
             window.history.pushState(route, '', `/event/${route.pageData}`);
-            dispatch(setRoute(route));
             window.history.forward();
+            gotoEvent(route.pageData);
         } else {
             window.history.pushState(route, '', `/notfound`);
-            dispatch(setRoute({ pageName: 'notfound' }));
             window.history.forward();
+            dispatch(setRoute({ pageName: 'notfound' }));                        
         }
     };
 }

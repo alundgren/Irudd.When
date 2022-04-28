@@ -6,7 +6,7 @@ import { CreateEventState } from './createEventSlice';
 import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from '../routing/routingSlice';
 import { useDispatch } from 'react-redux';
 import { EventService } from '../../services/EventService';
@@ -39,13 +39,18 @@ function CreateEvent() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate(dispatch);
+    const [isCreating, setIsCreating] = useState(false);
+    useEffect(() => {
+        if(isCreating) {
+            let eventService = new EventService();
+            eventService.createNewEvent(create).then(x => {
+                setIsCreating(false);
+                navigate({ pageName: 'event', pageData: x.id });
+            });
+        }
+    }, [isCreating, navigate, create]);
     const onCreateClicked = (e: React.SyntheticEvent) => {
-        //TODO: Set a saving state here while waiting. Can we get this into a side effect somehow? This feels sketchy.
-        //TODO: Regardless move this code out of the component
-        let eventService = new EventService();
-        eventService.createNewEvent(create).then(x => {
-            navigate({ pageName: 'event', pageData: x.id });
-        })        
+        setIsCreating(true);
     };
 
     return (
@@ -67,7 +72,7 @@ function CreateEvent() {
                 </div>                
             </div>            
             <div className="d-flex justify-content-end mt-2">
-                <button className="btn btn-outline-primary" disabled={!isValid} onClick={onCreateClicked}>Skapa</button>
+                <button className="btn btn-outline-primary" disabled={!isValid || isCreating} onClick={onCreateClicked}>Skapa</button>
             </div>           
         </form>
     );
