@@ -2,6 +2,7 @@ import { AnyAction } from 'redux'
 import { inferPageFromPathName, routingSliceReducer, setRoute } from './routingSlice';
 
 const createInitialState = () => ({
+    isNavigating: false,
     current: {
         pageName: 'create'
     }

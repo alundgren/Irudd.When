@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface CurrentEventState {
-    event ?: ExistingEvent
+    event : ExistingEvent | null
 }
 
 export interface ExistingEvent {
@@ -23,18 +23,18 @@ interface ExistingEventDate {
 }
 
 const initialState : CurrentEventState = {
-
+    event: null
 }
 
 const currentEventSlice = createSlice({
     name: 'currentEvent',
     initialState,
     reducers: {
-        setCurrentEvent(state, action: PayloadAction<ExistingEvent>) {
+        setCurrentEvent(state, action: PayloadAction<ExistingEvent | null>) {
             state.event = action.payload
         },
         clearCurrentEvent(state) {
-            state.event = undefined;
+            state.event = null;
         }
     }
 });

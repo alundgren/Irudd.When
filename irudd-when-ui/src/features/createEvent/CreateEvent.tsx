@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from '../routing/routingSlice';
 import { useDispatch } from 'react-redux';
 import { EventService } from '../../services/EventService';
 
@@ -38,7 +37,6 @@ function CreateEvent() {
     }
 
     const dispatch = useDispatch();
-    const navigate = useNavigate(dispatch);
     const [isCreating, setIsCreating] = useState(false);
     useEffect(() => {
         if(isCreating) {

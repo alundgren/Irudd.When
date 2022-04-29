@@ -10,12 +10,16 @@ let containerStyle = {
 }
 
 function App() {
-    const currentRoute = useSelector((x : { routing: RoutingState}) => x.routing.current);
+    const routing = useSelector((x : { routing: RoutingState}) => x.routing);
+    
     let body : JSX.Element;
 
-    if(currentRoute.pageName === 'create') {
+    if(routing.isNavigating) {
+        body = <div>Loading...</div>;
+    }
+    if(routing.current.pageName === 'create') {
         body = <Create  />;
-    } else if(currentRoute.pageName === 'event') {
+    } else if(routing.current.pageName === 'event') {
         body = <CurrentEvent />;
     } else {
         //TODO: Prettify
