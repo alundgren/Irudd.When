@@ -10,19 +10,18 @@ let containerStyle = {
 }
 
 function App() {
-    let body : JSX.Element;
     return (
         <div className="container-fluid d-flex flex-column mt-2" style={containerStyle}>
-            <Header />
-            <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-                <BrowserRouter>
+            <BrowserRouter>
+                <Header />
+                <div className="d-flex flex-grow-1 justify-content-center align-items-center">
                     <Routes>
                         <Route path="/" element={<CreateEvent />} />
                         <Route path="create" element={<CreateEvent />} />
                         <Route path="event/:eventId" element={<CurrentEvent />} />
-                    </Routes>
-                </BrowserRouter>
-            </div>
+                    </Routes>                
+                </div>
+            </BrowserRouter>
         </div>            
     );
 }

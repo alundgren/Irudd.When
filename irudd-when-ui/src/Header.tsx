@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 let containerStyle = {
     gap: 15
@@ -10,16 +10,18 @@ let logoStyle = {
 }
 
 function Header() {
+    const location = useLocation();
     let title = '';
-    /*
-    if(currentRoute.pageName === 'create') {
+    
+    console.log(location)
+    
+    if(location.pathname === '/create' || location.pathname === '/') {
         title = 'Ny händelse';
-    } else if(currentRoute.pageName === 'event') {
+    } else if(location.pathname.startsWith('/event')) {
         title = 'Händelse (todo: desc)'
     } else {
         title = 'Sidan finns inte'
     }
-    */     
     return (
         <div>
             <div className="navbar-light d-flex flex-row p-2 align-self-center fs-3" style={containerStyle}>

@@ -1,4 +1,4 @@
-﻿import {CurrentEventState, setCurrentEvent} from "./currentEventSlice";
+import {CurrentEventState, setCurrentEvent} from "./currentEventSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {EventService} from "../../services/EventService";
@@ -9,14 +9,15 @@ export function CurrentEvent() {
     let {eventId} = useParams();
     const dispatch = useDispatch();
     
+    const currentEventId = currentEvent?.id;
     useEffect(() => {
-        if(eventId && currentEvent?.id !== eventId) {
+        if(eventId && currentEventId !== eventId) {
             let s = new EventService();
             s.loadExistingEvent(eventId).then(x => {
                 dispatch(setCurrentEvent(x));
             })
         }
-    }, [eventId])
+    }, [eventId, currentEventId, dispatch])
     
     const json = JSON.stringify(currentEvent);
     return (

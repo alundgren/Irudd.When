@@ -6,8 +6,7 @@ import { CreateEventState } from './createEventSlice';
 import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
-import React, {useEffect, useState} from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useState} from 'react';
 import { EventService } from '../../services/EventService';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,17 +38,14 @@ function CreateEvent() {
     }
 
     const [isCreating, setIsCreating] = useState(false);
-    useEffect(() => {
-        if(isCreating) {
-            let eventService = new EventService();
-            eventService.createNewEvent(create).then(x => {
-                setIsCreating(false);
-                navigate('/event/' + x.id);
-            });
-        }
-    }, [isCreating, navigate, create]);
+    
     const onCreateClicked = (e: React.SyntheticEvent) => {
         setIsCreating(true);
+        let eventService = new EventService();
+        eventService.createNewEvent(create).then(x => {
+            setIsCreating(false);
+            navigate('/event/' + x.id);
+        });
     };
 
     return (
