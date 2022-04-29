@@ -5,30 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {createStore} from "./store";
-import { inferPageFromPathName, Router, setRoute } from './features/routing/routingSlice';
-import { resetCreate } from './features/createEvent/createEventSlice';
-import { EventService } from './services/EventService';
-import { setCurrentEvent } from './features/currentEvent/currentEventSlice';
 
 const store = createStore();
-
-const eventService = new EventService();
-let router = new Router(store, newPage => {
-    if(newPage.pageName === 'create') {
-        store.dispatch(resetCreate());
-        return new Promise<void>(resolve => { resolve(); });
-    } else if(newPage.pageName === 'event') {
-        return eventService.loadExistingEvent(newPage.pageData ?? '').then(x => {
-            store.dispatch(setCurrentEvent(x));
-        })
-    } else {
-        return new Promise<void>(resolve => { resolve(); });
-    }
-});
-let initialPage = inferPageFromPathName(window.location.pathname) ?? {
-    pageName: 'noSuchPage'
-};
-store.dispatch(setRoute(initialPage));
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

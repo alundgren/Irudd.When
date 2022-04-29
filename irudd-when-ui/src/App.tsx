@@ -1,7 +1,7 @@
 import Header from './Header'
-import Create from './features/createEvent/CreateEvent'
-import { RoutingState } from './features/routing/routingSlice';
-import { useSelector } from 'react-redux';
+import React from "react";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import CreateEvent from "./features/createEvent/CreateEvent";
 import {CurrentEvent} from "./features/currentEvent/CurrentEvent";
 
 let containerStyle = {
@@ -10,27 +10,18 @@ let containerStyle = {
 }
 
 function App() {
-    const routing = useSelector((x : { routing: RoutingState}) => x.routing);
-    
     let body : JSX.Element;
-
-    if(routing.isNavigating) {
-        body = <div>Loading...</div>;
-    }
-    if(routing.current.pageName === 'create') {
-        body = <Create  />;
-    } else if(routing.current.pageName === 'event') {
-        body = <CurrentEvent />;
-    } else {
-        //TODO: Prettify
-        body = <div>TODO: Länk till skapa ny</div>
-    }
-
     return (
         <div className="container-fluid d-flex flex-column mt-2" style={containerStyle}>
             <Header />
             <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-                {body}
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<CreateEvent />} />
+                        <Route path="create" element={<CreateEvent />} />
+                        <Route path="event/:eventId" element={<CurrentEvent />} />
+                    </Routes>
+                </BrowserRouter>
             </div>
         </div>            
     );

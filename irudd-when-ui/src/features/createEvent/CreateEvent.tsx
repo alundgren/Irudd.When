@@ -9,6 +9,7 @@ import { I18nState } from '../i18n/i18nSlice';
 import React, {useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { EventService } from '../../services/EventService';
+import { useNavigate } from 'react-router-dom';
 
 let wrapperStyle = {
     gap: 30,
@@ -21,7 +22,8 @@ let singleLineRowStyle = {
 function CreateEvent() {
     const locale = useSelector((x: { i18n: I18nState }) => x.i18n.locale);
     const create = useSelector((x : { createEvent: CreateEventState }) => x.createEvent);
-
+    const navigate = useNavigate();
+    
     let isValid = true;
     const dateService = new DateService(locale, create.dateOnly);
     if(create.dates.length === 0 || create.dates.find(x => !dateService.isValid(x.date))) {
@@ -36,14 +38,13 @@ function CreateEvent() {
         isValid = false;
     }
 
-    const dispatch = useDispatch();
     const [isCreating, setIsCreating] = useState(false);
     useEffect(() => {
         if(isCreating) {
             let eventService = new EventService();
             eventService.createNewEvent(create).then(x => {
                 setIsCreating(false);
-                navigate({ pageName: 'event', pageData: x.id });
+                navigate('/event/' + x.id);
             });
         }
     }, [isCreating, navigate, create]);
