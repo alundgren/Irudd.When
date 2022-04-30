@@ -39,13 +39,12 @@ function CreateEvent() {
 
     const [isCreating, setIsCreating] = useState(false);
     
-    const onCreateClicked = (e: React.SyntheticEvent) => {
+    const onCreateClicked = async (e: React.SyntheticEvent) => {
         setIsCreating(true);
         let eventService = new EventService();
-        eventService.createNewEvent(create).then(x => {
-            setIsCreating(false);
-            navigate('/event/' + x.id);
-        });
+        let event = await eventService.createNewEvent(create);
+        setIsCreating(false);
+        navigate('/event/' + event.id);        
     };
 
     return (

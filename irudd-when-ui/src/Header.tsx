@@ -1,5 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { CurrentEventState } from "./features/currentEvent/currentEventSlice";
 
 let containerStyle = {
     gap: 15
@@ -12,13 +14,13 @@ let logoStyle = {
 function Header() {
     const location = useLocation();
     let title = '';
-    
-    console.log(location)
+
+    const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent.event);
     
     if(location.pathname === '/create' || location.pathname === '/') {
         title = 'Ny händelse';
-    } else if(location.pathname.startsWith('/event')) {
-        title = 'Händelse (todo: desc)'
+    } else if(location.pathname.startsWith('/event')) {                
+        title = currentEvent?.description ?? '';
     } else {
         title = 'Sidan finns inte'
     }
