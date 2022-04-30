@@ -6,8 +6,8 @@ import { CreateEventState } from './createEventSlice';
 import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
-import React, {useState} from 'react';
-import { EventService } from '../../services/EventService';
+import React, { useState } from 'react';
+import EventService from '../../services/EventService';
 import { useNavigate } from 'react-router-dom';
 
 let wrapperStyle = {
@@ -40,6 +40,7 @@ function CreateEvent() {
     const [isCreating, setIsCreating] = useState(false);
     
     const onCreateClicked = async (e: React.SyntheticEvent) => {
+        e.preventDefault();
         setIsCreating(true);
         let eventService = new EventService();
         let event = await eventService.createNewEvent(create);
@@ -66,7 +67,7 @@ function CreateEvent() {
                 </div>                
             </div>            
             <div className="d-flex justify-content-end mt-2">
-                <button className="btn btn-outline-primary" disabled={!isValid || isCreating} onClick={onCreateClicked}>Skapa</button>
+                <button className="btn btn-outline-primary" disabled={!isValid || isCreating} onClick={onCreateClicked} data-testid="createButton">Skapa</button>
             </div>           
         </form>
     );

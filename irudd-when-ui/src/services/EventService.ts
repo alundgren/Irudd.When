@@ -4,7 +4,7 @@ import { ExistingEvent } from "../features/currentEvent/currentEventSlice";
 const MockDelayMs = 200;
 
 //TODO: Replace with an actual backend
-export class EventService {
+export default class EventService {
     createNewEvent(data: CreateEventState) : Promise<ExistingEvent> {
         const generateItemId = () => Math.random().toString(36).substring(2, 8);
         return new Promise<ExistingEvent>(resolve => {

@@ -1,7 +1,7 @@
 import {CurrentEventState, setCurrentEvent} from "./currentEventSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {EventService} from "../../services/EventService";
+import EventService from "../../services/EventService";
 import { useParams } from "react-router-dom";
 
 export function CurrentEvent() {
@@ -15,7 +15,7 @@ export function CurrentEvent() {
             let s = new EventService();
             s.loadExistingEvent(eventId).then(x => {
                 dispatch(setCurrentEvent(x));
-            })
+            });
         }
     }, [eventId, currentEventId, dispatch])
     
