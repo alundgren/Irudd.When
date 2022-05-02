@@ -3,6 +3,27 @@ import { ExistingEvent } from "../features/currentEvent/currentEventSlice";
 
 const MockDelayMs = 200;
 
+
+/*
+const response = window.fetch('https://localhost:7095/api/v1/create-event', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8',
+    },
+    body: JSON.stringify({ id: 'test' }),
+  })
+*/
+
+/*
+const response = window.fetch('https://localhost:7095/api/v1/event/A424224', {
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8',
+    }
+  })
+*/
+
+
 //TODO: Replace with an actual backend
 export default class EventService {
     createNewEvent(data: CreateEventState) : Promise<ExistingEvent> {
