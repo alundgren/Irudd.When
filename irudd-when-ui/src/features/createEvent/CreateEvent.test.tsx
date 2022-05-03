@@ -5,7 +5,6 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createStore } from '../../store';
 import CreateEvent from "./CreateEvent";
 import { addDate, addParticipant, setDateOnly, setDescription } from "./createEventSlice";
-import React from "react";
 import EventService from "../../services/EventService";
 
 let store = createStore();
