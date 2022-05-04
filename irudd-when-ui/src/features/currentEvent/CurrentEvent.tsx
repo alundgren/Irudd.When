@@ -1,6 +1,6 @@
 import {CurrentEventState, setCurrentEvent} from "./currentEventSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import EventService from "../../services/EventService";
 import { useParams } from "react-router-dom";
 import IconForButton from "../../components/IconForButton";
@@ -8,6 +8,8 @@ import IconForButton from "../../components/IconForButton";
 export function CurrentEvent() {
     const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent.event);
     let {eventId} = useParams();
+    const [noSuchEventExists, setNoSuchEventExists] = useState(false);
+
     const dispatch = useDispatch();
     
     const currentEventId = currentEvent?.id;
@@ -16,6 +18,7 @@ export function CurrentEvent() {
             let s = new EventService();
             s.loadExistingEvent(eventId).then(x => {
                 dispatch(setCurrentEvent(x));
+                setNoSuchEventExists(!x);
             });
         }
     }, [eventId, currentEventId, dispatch])
@@ -28,56 +31,65 @@ export function CurrentEvent() {
     let timeColumnStyle = {
         width: 100
     }
-    return (
-        <div style={{ outline:'1px solid black' }}>
-            <div className="d-flex flex-grow-1 p-2 flex-column" style={containerStyle}>
-                <div className="d-flex flex-grow-1 flex-row">
-                    <div style={timeColumnStyle}>
-                        2022-05-03
+    let timeColumnClasses = "d-flex justify-content-center align-items-center";
+
+    let result : JSX.Element
+
+    if(noSuchEventExists) {
+        result = (<div>Händelsen finns inte</div>);
+    } else {
+        result = (
+            <div style={{ outline:'1px solid black' }}>
+                <div className="d-flex flex-grow-1 p-2 flex-column" style={containerStyle}>
+                    <div className="d-flex flex-grow-1 flex-row">
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            2022-05-03
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            2022-05-04
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            2022-05-04
+                        </div>                 
                     </div>
-                    <div style={timeColumnStyle}>
-                        2022-05-04
+                    <div className="d-flex flex-grow-1 flex-row">
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            12:30
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            11:30
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            12:30
+                        </div>                 
+                    </div>                            
+                    <div className="d-flex flex-grow-1 flex-row mt-3">
+                        <div className="d-flex flex-grow-1 justify-content-center align-items-center border-bottom">
+                            Karl Holger
+                        </div>
                     </div>
-                    <div style={timeColumnStyle}>
-                        2022-05-04
-                    </div>                 
+                    <div className="d-flex flex-grow-1 flex-row mt-1">
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            <button className="btn btn-warning d-flex justify-content-center align-items-center" type="button">
+                                <IconForButton iconType='pendingAnswer' />
+                            </button>
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            <button className="btn btn-success d-flex justify-content-center align-items-center" type="button">
+                                <IconForButton iconType='acceptedAnswer' />
+                            </button>
+                        </div>
+                        <div style={timeColumnStyle} className={timeColumnClasses}>
+                            <button className="btn btn-danger d-flex justify-content-center align-items-center" type="button">
+                                <IconForButton iconType='rejectedAnswer' />
+                            </button>
+                        </div>                 
+                    </div>                  
                 </div>
-                <div className="d-flex flex-grow-1 flex-row">
-                    <div style={timeColumnStyle}>
-                        12:30
-                    </div>
-                    <div style={timeColumnStyle}>
-                        11:30
-                    </div>
-                    <div style={timeColumnStyle}>
-                        12:30
-                    </div>                 
-                </div>                            
-                <div className="d-flex flex-grow-1 flex-row">
-                    <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-                        Karl Holger
-                    </div>
-                </div>
-                <div className="d-flex flex-grow-1 flex-row">
-                    <div style={timeColumnStyle}>
-                        <button className="btn btn-warning d-flex justify-content-center align-items-center" type="button">
-                            <IconForButton iconType='pendingAnswer' />
-                        </button>
-                    </div>
-                    <div style={timeColumnStyle}>
-                        <button className="btn btn-success d-flex justify-content-center align-items-center" type="button">
-                            <IconForButton iconType='acceptedAnswer' />
-                        </button>
-                    </div>
-                    <div style={timeColumnStyle}>
-                        <button className="btn btn-danger d-flex justify-content-center align-items-center" type="button">
-                            <IconForButton iconType='rejectedAnswer' />
-                        </button>
-                    </div>                 
-                </div>                  
-            </div>
-            <pre>{json}</pre>
-        </div>
-        
-    );
+                <pre>{json}</pre>
+            </div>        
+        );
+    }
+
+    return result;
 }
