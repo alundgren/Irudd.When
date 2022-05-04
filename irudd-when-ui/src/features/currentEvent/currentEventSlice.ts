@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+type Choice = 'unknown' | 'accepted' | 'rejected'
+
 export interface CurrentEventState {
     eventId : string | null
     event : ExistingEvent | null
@@ -11,7 +13,14 @@ export interface ExistingEvent {
     description: string
     dateOnly: boolean
     participants: ExistingEventParticipant[]
-    dates: ExistingEventDate[] 
+    dates: ExistingEventDate[]
+    participantDateChoices: ExistingEventParticipantDateChoice[]
+}
+
+interface ExistingEventParticipantDateChoice {
+    dateId: string
+    participantId: string
+    choice: Choice
 }
 
 interface ExistingEventParticipant {
@@ -48,9 +57,34 @@ const currentEventSlice = createSlice({
             state.eventId = null;
             state.event = null;
             state.isMissing = false;
+        },
+        setParticipantDateChoice(state, action: PayloadAction<ExistingEventParticipantDateChoice>) {
+            //TODO: This feels like code smell. The current event abstraction is probably not the right size puzzle piece.
+            if(!state.event) {
+                return;
+            }
+            if(!state.event.participantDateChoices) {
+                state.event.participantDateChoices = [];
+            }
+            state.event.participantDateChoices.push(action.payload);
         }
     }
 });
 
-export const { setMissingCurrentEvent, setExisitingCurrentEvent, clearCurrentEvent } = currentEventSlice.actions;
+export function getCurrentParticipantDateChoice(event: ExistingEvent | null, dateId: string, participantId: string) : Choice {
+    if(event === null) {
+        return 'unknown';
+    }
+    
+    if(!event.participantDateChoices)
+        return 'unknown';
+
+    let hits = event.participantDateChoices.filter(x => x.dateId === dateId && x.participantId == participantId);
+    if(hits.length === 0)
+        return 'unknown';
+    
+    return hits[hits.length - 1].choice;
+}
+
+export const { setMissingCurrentEvent, setExisitingCurrentEvent, clearCurrentEvent, setParticipantDateChoice } = currentEventSlice.actions;
 export const currentEventSliceReducer = currentEventSlice.reducer;

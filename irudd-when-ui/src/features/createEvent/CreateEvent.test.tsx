@@ -14,7 +14,7 @@ describe('Create event', () => {
         store = createStore();        
         //NOTE: Want this in beforeAll but that does not work
         jest.spyOn(EventService.prototype, 'createNewEvent')
-            .mockResolvedValue({ id: 'a42', description: 'test', participants: [], dates: [], dateOnly: false });
+            .mockResolvedValue({ id: 'a42', description: 'test', participants: [], dates: [], dateOnly: false, participantDateChoices: [] });
     });
     
     afterEach(() => {

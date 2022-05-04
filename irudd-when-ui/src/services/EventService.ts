@@ -99,7 +99,8 @@ class LocalStorageEventService implements IEventService {
                     participants: data.participants,
                     dateOnly: data.dateOnly,
                     dates: data.dates,
-                    description: data.description
+                    description: data.description,
+                    participantDateChoices: []
                 };
 
                 window.localStorage.setItem(this.storagePrefix + eventId, JSON.stringify(event));
