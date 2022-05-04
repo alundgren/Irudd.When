@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface CurrentEventState {
+    eventId : string | null
     event : ExistingEvent | null
+    isMissing: boolean
 }
 
 export interface ExistingEvent {
@@ -23,21 +25,32 @@ interface ExistingEventDate {
 }
 
 const initialState : CurrentEventState = {
-    event: null
+    eventId: null,
+    event: null,
+    isMissing: false
 }
 
 const currentEventSlice = createSlice({
     name: 'currentEvent',
     initialState,
     reducers: {
-        setCurrentEvent(state, action: PayloadAction<ExistingEvent | null>) {
-            state.event = action.payload
+        setExisitingCurrentEvent(state, action: PayloadAction<ExistingEvent>) {
+            state.eventId = action.payload.id;
+            state.event = action.payload;           
+            state.isMissing = false;
         },
-        clearCurrentEvent(state) {
+        setMissingCurrentEvent(state, action: PayloadAction<string>) {
+            state.eventId = action.payload;
             state.event = null;
+            state.isMissing = true;       
+        },        
+        clearCurrentEvent(state) {
+            state.eventId = null;
+            state.event = null;
+            state.isMissing = false;
         }
     }
 });
 
-export const { setCurrentEvent, clearCurrentEvent } = currentEventSlice.actions;
+export const { setMissingCurrentEvent, setExisitingCurrentEvent, clearCurrentEvent } = currentEventSlice.actions;
 export const currentEventSliceReducer = currentEventSlice.reducer;

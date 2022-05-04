@@ -1,4 +1,4 @@
-import {CurrentEventState, setCurrentEvent} from "./currentEventSlice";
+import {CurrentEventState, setExisitingCurrentEvent, setMissingCurrentEvent } from "./currentEventSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import EventService from "../../services/EventService";
@@ -6,22 +6,24 @@ import { useParams } from "react-router-dom";
 import IconForButton from "../../components/IconForButton";
 
 export function CurrentEvent() {
-    const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent.event);
-    let {eventId} = useParams();
-    const [noSuchEventExists, setNoSuchEventExists] = useState(false);
+    const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent);
+    let routeEventId = useParams().eventId;
 
     const dispatch = useDispatch();
     
-    const currentEventId = currentEvent?.id;
     useEffect(() => {
-        if(eventId && currentEventId !== eventId) {
+        if(routeEventId && currentEvent?.eventId !== routeEventId) {
             let s = new EventService();
-            s.loadExistingEvent(eventId).then(x => {
-                dispatch(setCurrentEvent(x));
-                setNoSuchEventExists(!x);
+            let localRouteEventId = routeEventId;
+            s.loadExistingEvent(localRouteEventId).then(x => {
+                if(x) {
+                    dispatch(setExisitingCurrentEvent(x));
+                } else {
+                    dispatch(setMissingCurrentEvent(localRouteEventId));
+                }
             });
         }
-    }, [eventId, currentEventId, dispatch])
+    }, [routeEventId, currentEvent, dispatch])
     
     //http://localhost:3000/event/e9a8wa18dh2sw
     const json = JSON.stringify(currentEvent,null, ' ');
@@ -35,8 +37,12 @@ export function CurrentEvent() {
 
     let result : JSX.Element
 
-    if(noSuchEventExists) {
-        result = (<div>Händelsen finns inte</div>);
+    if(!currentEvent.event) {
+        if(currentEvent.isMissing) {
+            result = <div><a href="/">Skapa ny händelse</a></div>;
+        } else {
+            result = <div>Laddar...</div>;
+        }
     } else {
         result = (
             <div style={{ outline:'1px solid black' }}>
