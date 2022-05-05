@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type Choice = 'unknown' | 'accepted' | 'rejected'
+export type Choice = 'unknown' | 'accepted' | 'rejected'
 
 export interface CurrentEventState {
     eventId : string | null
@@ -28,7 +28,7 @@ interface ExistingEventParticipant {
     name: string
 }
 
-interface ExistingEventDate {
+export interface ExistingEventDate {
     id: string
     date: string
 }
@@ -79,7 +79,7 @@ export function getCurrentParticipantDateChoice(event: ExistingEvent | null, dat
     if(!event.participantDateChoices)
         return 'unknown';
 
-    let hits = event.participantDateChoices.filter(x => x.dateId === dateId && x.participantId == participantId);
+    let hits = event.participantDateChoices.filter(x => x.dateId === dateId && x.participantId === participantId);
     if(hits.length === 0)
         return 'unknown';
     

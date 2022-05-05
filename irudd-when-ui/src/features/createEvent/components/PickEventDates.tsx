@@ -79,7 +79,7 @@ function PickEventDates() {
             {dateElements}
             <div className="input-group flex-grow-1">
                 <InputAddonButton iconType='showCalendar' buttonType='secondary' data-testid="showCalendar" isDisabled={true} />
-                <input type="text" className={classes(newDateClasses)} placeholder={dateService.getDateFormat()}
+                <input type="text" className={classes(newDateClasses)} placeholder={dateService.getDateFormat('full')}
                     data-testid="addInput" value={newDate} onChange={onNewDateChanged} onKeyDown={onNewDateKeyDown} />
                 <InputAddonButton iconType='addTime' buttonType='secondary' testId="addButton" isDisabled={!isNewDateValid}
                     onClick={onAddDate} />
