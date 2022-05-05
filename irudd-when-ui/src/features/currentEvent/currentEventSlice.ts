@@ -17,7 +17,7 @@ export interface ExistingEvent {
     participantDateChoices: ExistingEventParticipantDateChoice[]
 }
 
-interface ExistingEventParticipantDateChoice {
+export interface ExistingEventParticipantDateChoice {
     dateId: string
     participantId: string
     choice: Choice
