@@ -28,4 +28,19 @@ test('isValid: 2022-12-24 is a valid date only', () => {
 
 test('isValid: Empty string is not a valid date', () => {
     expect(dateOnlyDateService.isValid('')).toBe(false);
-})
+});
+
+test('formatForDisplay: full format shows date and time', () => {
+    let date = DateTime.local(2022, 12, 24, 23, 45, 58, 59);
+    expect(dateAndTimeDateService.formatForDisplay(date, 'full')).toBe('2022-12-24 23:45')
+});
+
+test('formatForDisplay: dateOnly format shows date but no time', () => {
+    let date = DateTime.local(2022, 12, 24, 23, 45, 58, 59);
+    expect(dateAndTimeDateService.formatForDisplay(date, 'dateOnly')).toBe('2022-12-24')
+});
+
+test('formatForDisplay: timeOnly format shows time but no date', () => {
+    let date = DateTime.local(2022, 12, 24, 23, 45, 58, 59);
+    expect(dateAndTimeDateService.formatForDisplay(date, 'timeOnly')).toBe('23:45')
+});

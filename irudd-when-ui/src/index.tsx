@@ -5,8 +5,11 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {createStore} from "./store";
+import { connectStoreToServerCallbacks } from './services/EventService';
 
 const store = createStore();
+
+connectStoreToServerCallbacks(store);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

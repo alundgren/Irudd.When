@@ -15,12 +15,12 @@ function Header() {
     const location = useLocation();
     let title = '';
 
-    const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent.event);
+    const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent);
     
     if(location.pathname === '/create' || location.pathname === '/') {
         title = 'Ny händelse';
     } else if(location.pathname.startsWith('/event')) {                
-        title = currentEvent?.description ?? '';
+        title = currentEvent.isMissing ? 'Händelsen finns inte' : currentEvent?.event?.description ?? ''
     } else {
         title = 'Sidan finns inte'
     }
