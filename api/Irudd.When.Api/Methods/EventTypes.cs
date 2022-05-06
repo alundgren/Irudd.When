@@ -4,14 +4,14 @@
         string Description,
         bool DateOnly,
         List<EventParticipant> Participants,
-        List<EventDate> EventDates);
+        List<EventDate> Dates);
 
     public record ExistingEvent(
         string Id,
         string Description,
         bool DateOnly,
         List<EventParticipant> Participants,
-        List<EventDate> EventDates,
+        List<EventDate> Dates,
         List<ParticipantDateChoice> participantDateChoices);
 
     public record EventParticipant(string Id, string Name);

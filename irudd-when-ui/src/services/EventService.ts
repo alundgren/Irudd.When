@@ -110,11 +110,27 @@ class ApiEventService implements IEventService {
     }
 
     async setParticipantDateChoice(eventId: string, dateId: string, participantId: string, choice: Choice) : Promise<void> {
-        throw new Error('Not implemented');
+        let response = await window.fetch(this.getAbsoluteUrl('api/v1/set-participant-date-choice'), {
+            method: 'POST',
+            headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            },
+            body: JSON.stringify({
+                EventId: eventId,
+                Choice: {
+                    ParticipantId: participantId,
+                    DateId: dateId,
+                    Choice: choice
+                }
+            }),
+        });
+        if(!response.ok) {
+            throw new Error(response.statusText)
+        }
     }
 
     setServerCallback(callback: ServerCallback) : void {
-        throw new Error('Not implemented');
+        
     }
 
     private getAbsoluteUrl(relativeUrl: string) {

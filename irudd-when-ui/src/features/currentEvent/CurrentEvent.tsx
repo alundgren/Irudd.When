@@ -52,7 +52,7 @@ export function CurrentEvent() {
             </div>
         );
 
-        let timeRow = event.dateOnly ? (
+        let timeRow = !event.dateOnly ? (
             <div className="d-flex flex-grow-1 flex-row">
                 {event.dates.map(x => (
                     <div style={timeColumnStyle} className={timeColumnClasses} key={"t" + x.id}>

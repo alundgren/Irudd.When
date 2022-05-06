@@ -1,5 +1,6 @@
 using Irudd.When.Api.Methods;
 using Irudd.When.Api.Storage;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +24,6 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -33,11 +32,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
-//app.MapHub<ChatHub>("/chatHub");
+app.MapHub<SetParticipantDateChoiceHub>("/setParticipantDateChoiceHub");
 
 var store = new KeyValueStore();
 
 CreateEventMethod.Map(app, store, app.Environment.IsDevelopment());
 ExistingEventMethod.Map(app, store);
+SetParticipantDateChoiceMethod.Map(app, store, app.Services.GetRequiredService<IHubContext<SetParticipantDateChoiceHub>>());
 
 app.Run();
