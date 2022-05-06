@@ -1,4 +1,5 @@
 using Irudd.When.Api.Methods;
+using Irudd.When.Api.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddCors(options =>
         });
     }
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -31,8 +33,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
+//app.MapHub<ChatHub>("/chatHub");
 
-CreateEventMethod.Map(app);
-ExistingEventMethod.Map(app);
+var store = new KeyValueStore();
+
+CreateEventMethod.Map(app, store, app.Environment.IsDevelopment());
+ExistingEventMethod.Map(app, store);
 
 app.Run();

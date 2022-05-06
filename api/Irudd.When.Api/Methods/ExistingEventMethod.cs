@@ -1,33 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Irudd.When.Api.Storage;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Irudd.When.Api.Methods
 {
     public class ExistingEventMethod
     {
-        internal static void Map(WebApplication app)
+        internal static void Map(WebApplication app, KeyValueStore store)
         {
-            app.MapGet("/api/v1/event/{id}", (string id) =>
+            app.MapGet("/api/v1/event/{id}", async (string id) =>
             {
-                if (id == "A424224")
-                {
-                    return Results.Ok(new ExistingEvent(
-                        "A424224",
-                        "En lunch",
-                        true,
-                        new List<EventParticipant>
-                        {
-                        new EventParticipant("p1", "Kalle"),
-                        new EventParticipant("p2", "Hobbe")
-                        },
-                        new List<EventDate>
-                        {
-                        new EventDate("d1", "2022-12-21"),
-                        new EventDate("d2", "2022-12-22")
-                        }));
-                }
-                else 
-                    return Results.NotFound();
+                var evt = await store.GetEvent(id);
+                if (evt != null)
+                    return Results.Ok(evt);
+                else
+                    return Results.NotFound();   
             })
             .WithName("ExistingEvent");
         }
