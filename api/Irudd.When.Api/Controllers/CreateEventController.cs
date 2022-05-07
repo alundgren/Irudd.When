@@ -1,33 +1,34 @@
-﻿using Irudd.When.Api.Storage;
+﻿using System.Security.Cryptography;
+using Irudd.When.Api.Methods;
+using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
 
-namespace Irudd.When.Api.Methods
+namespace Irudd.When.Api.Controllers
 {
-    public class CreateEventMethod
+    public class CreateEventController : Controller
     {
-        internal static void Map(WebApplication app, KeyValueStore store, bool isDevelopment)
+        private readonly KeyValueStore _store;
+
+        public CreateEventController(KeyValueStore store)
         {
-            app.MapPost("/api/v1/create-event", async ([FromBody] NewEvent newEvent) =>
-            {
-                var id = CreateRandomUrlSafeString(7);
-                var evt = new ExistingEvent(
-                    id,
-                    newEvent.Description,
-                    newEvent.DateOnly,
-                    newEvent.Participants ?? new List<EventParticipant>(),
-                    new List<EventDate>() ?? new List<EventDate>(),
-                    new List<ParticipantDateChoice>());
+            _store = store;
+        }
 
-                await store.SetEvent(evt);
+        [HttpPost("/api/v1/create-event")]
+        public async Task<ExistingEvent> Post([FromBody] NewEvent newEvent)
+        {
+            var id = CreateRandomUrlSafeString(7);
+            var evt = new ExistingEvent(
+                id,
+                newEvent.Description,
+                newEvent.DateOnly,
+                newEvent.Participants ?? new List<EventParticipant>(),
+                new List<EventDate>() ?? new List<EventDate>(),
+                new List<ParticipantDateChoice>());
 
-                return evt;
-            })
-            .WithName("CreateEvent");
+            await _store.SetEvent(evt);
 
-            if (isDevelopment)
-                AddTestData(store);
+            return evt;
         }
 
         private static string CreateRandomUrlSafeString(int length)
@@ -37,7 +38,8 @@ namespace Irudd.When.Api.Methods
                 .Select(s => s[RandomNumberGenerator.GetInt32(s.Length)]).ToArray());
         }
 
-        private static void AddTestData(KeyValueStore store) =>
+        //TODO: Move this
+        public static void AddTestData(KeyValueStore store) =>
             Task.Run(() =>
                 store.SetEvent(new ExistingEvent(
                     "A424224",

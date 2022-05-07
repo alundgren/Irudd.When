@@ -1,3 +1,5 @@
+using Irudd.When.Api.Controllers;
+using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Methods;
 using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.SignalR;
@@ -22,6 +24,8 @@ builder.Services.AddCors(options =>
     }
 });
 builder.Services.AddSignalR();
+builder.Services.AddControllers();
+builder.Services.AddSingleton(new KeyValueStore());
 
 var app = builder.Build();
 
@@ -34,11 +38,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 app.MapHub<EventsHub>("/hubs/events");
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
-var store = new KeyValueStore();
-
-CreateEventMethod.Map(app, store, app.Environment.IsDevelopment());
-ExistingEventMethod.Map(app, store);
-SetParticipantDateChoiceMethod.Map(app, store, app.Services.GetRequiredService<IHubContext<EventsHub>>());
+if (app.Environment.IsDevelopment())
+{
+    CreateEventController.AddTestData(app.Services.GetRequiredService<KeyValueStore>());    
+}
 
 app.Run();
