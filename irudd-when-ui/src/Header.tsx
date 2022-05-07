@@ -1,7 +1,8 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CurrentEventState } from "./features/currentEvent/currentEventSlice";
+import { showToast } from "./features/toasts/toastsSlice";
 
 let containerStyle = {
     gap: 15
@@ -16,6 +17,7 @@ function Header() {
  
     const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent);
     
+    let dispatch = useDispatch();
     let [showShare, setShowShare] = useState(false);    
     
     let shareIcon = <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-box-arrow-up" viewBox="0 0 16 16">
@@ -27,12 +29,6 @@ function Header() {
         display: 'inline-block',
         width: '1.5em',
         height: '1.5em',
-        /*
-        verticalAlign: 'middle',        
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: '100%',
-        */
         cursor:'pointer'
     }
  
@@ -46,11 +42,13 @@ function Header() {
             const onShareClicked = (e: SyntheticEvent) => {
                 setShowShare(!showShare);
             };
+            
             const onUrlFocused = (e: React.FocusEvent) => {
                 let inputElement = e.target as HTMLInputElement;
                 inputElement.select();
+                
                 navigator.clipboard.writeText(inputElement.value).then(_ => {
-                    console.log('Copied to clipboard')
+                    dispatch(showToast('Copied to clipboard'));
                 }).catch(_ =>{
                     /* Ignored: They will have to copy manually */
                 });
