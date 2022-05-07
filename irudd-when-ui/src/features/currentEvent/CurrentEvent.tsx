@@ -43,7 +43,7 @@ export function CurrentEvent() {
         let dateService = new DateService(locale, event.dateOnly);
         
         let dateRow = (
-            <div className="d-flex flex-grow-1 flex-row">
+            <div className="d-flex flex-grow-1 flex-row justify-content-between">
                 {event.dates.map(x => (
                     <div style={timeColumnStyle} className={timeColumnClasses} key={"d" + x.id}>
                         {dateService.formatForDisplay(x.date, 'dateOnly')}
@@ -53,7 +53,7 @@ export function CurrentEvent() {
         );
 
         let timeRow = !event.dateOnly ? (
-            <div className="d-flex flex-grow-1 flex-row">
+            <div className="d-flex flex-grow-1 flex-row justify-content-between">
                 {event.dates.map(x => (
                     <div style={timeColumnStyle} className={timeColumnClasses} key={"t" + x.id}>
                         {dateService.formatForDisplay(x.date, 'timeOnly')}
@@ -93,12 +93,12 @@ export function CurrentEvent() {
         };
 
         let participants = event.participants.map(participant => (<React.Fragment key={participant.id}>
-            <div className="d-flex flex-grow-1 flex-row mt-3">
-                <div className="d-flex flex-grow-1 justify-content-center align-items-center border-bottom">
+            <div className="d-flex flex-grow-1 flex-row mt-5">
+                <div className="d-flex flex-grow-1 justify-content-center align-items-center border-bottom fst-italic">
                     {participant.name}
                 </div>
             </div>
-            <div className="d-flex flex-grow-1 flex-row mt-1">
+            <div className="d-flex flex-grow-1 flex-row mt-1 justify-content-between">
                 {event.dates.map(date => (
                     <div style={timeColumnStyle} className={timeColumnClasses} key={date.id + "#" + participant.id}>
                         <button className={getChoiceButtonClass(date.id, participant.id)}
@@ -111,12 +111,10 @@ export function CurrentEvent() {
         </React.Fragment>));
 
         result = (
-            <div style={{ outline: '1px solid black' }}>
-                <div className="d-flex flex-grow-1 p-2 flex-column" style={containerStyle}>
-                    {dateRow}
-                    {timeRow}
-                    {participants}
-                </div>
+            <div className="d-flex flex-grow-1 p-2 flex-column" style={containerStyle}>
+                {dateRow}
+                {timeRow}
+                {participants}
             </div>
         );      
     } else {
