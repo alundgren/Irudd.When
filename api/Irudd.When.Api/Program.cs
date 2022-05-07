@@ -14,9 +14,10 @@ builder.Services.AddCors(options =>
     {
         options.AddDefaultPolicy(x =>
         {
-            x.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback);
-            x.AllowAnyHeader();
-            x.AllowAnyMethod();
+            x.AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins(builder.Configuration.GetValue<string>("SiteUrl"))
+                .AllowCredentials();
         });
     }
 });
@@ -32,12 +33,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
-app.MapHub<SetParticipantDateChoiceHub>("/setParticipantDateChoiceHub");
+app.MapHub<EventsHub>("/hubs/events");
 
 var store = new KeyValueStore();
 
 CreateEventMethod.Map(app, store, app.Environment.IsDevelopment());
 ExistingEventMethod.Map(app, store);
-SetParticipantDateChoiceMethod.Map(app, store, app.Services.GetRequiredService<IHubContext<SetParticipantDateChoiceHub>>());
+SetParticipantDateChoiceMethod.Map(app, store, app.Services.GetRequiredService<IHubContext<EventsHub>>());
 
 app.Run();

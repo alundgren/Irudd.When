@@ -1,13 +1,12 @@
 ﻿using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.ComponentModel.DataAnnotations;
 
 namespace Irudd.When.Api.Methods
 {
     public class SetParticipantDateChoiceMethod
     {
-        internal static void Map(WebApplication app, KeyValueStore store, IHubContext<SetParticipantDateChoiceHub> hubContext)
+        internal static void Map(WebApplication app, KeyValueStore store, IHubContext<EventsHub> hubContext)
         {
             app.MapPost("/api/v1/set-participant-date-choice", async ([FromBody] SetParticipantDateChoiceRequest request) =>
             {
@@ -20,7 +19,20 @@ namespace Irudd.When.Api.Methods
                 await store.SetEvent(evt);
 
                 //TODO: Only send to clients that actually have this event open
-                await hubContext.Clients.All.SendAsync("SetParticipantDateChoice", request.EventId, request.Choice);
+                await hubContext.Clients.All.SendAsync("EventUpdate", new
+                {
+                    name = "participantDateChoice",   
+                    payload = new
+                    {
+                        eventId = request.EventId,
+                        participantDateChoice = new
+                        {
+                            dateId = request.Choice.DateId,
+                            participantId = request.Choice.ParticipantId,
+                            choice = request.Choice.Choice
+                        }
+                    }
+                }, request.Choice);
 
                 return Results.Ok();
             })
@@ -30,13 +42,13 @@ namespace Irudd.When.Api.Methods
 
     public record SetParticipantDateChoiceRequest(string EventId, ParticipantDateChoice Choice);
 
-    public class SetParticipantDateChoiceHub : Hub
+    public class EventsHub : Hub
     {
         //TODO: Why do I need this when the exact same is repeated in the Map method? What does this do?
-        public async Task SetParticipantDateChoice(string eventId, ParticipantDateChoice choice)
+        public async Task EventUpdate(string eventId, ParticipantDateChoice choice)
         {
             //TODO: Change all for just users connected to this event
-            await Clients.All.SendAsync("SetParticipantDateChoice", eventId, choice);
+            await Clients.All.SendAsync("EventUpdate", eventId, choice);
         }
     }
 }
