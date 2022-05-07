@@ -1,13 +1,12 @@
-using Irudd.When.Api.Methods;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Irudd.When.Api.Hubs;
 
 public class EventsHub : Hub
 {
-    public static async Task SendEventUpdate(IHubContext<EventsHub> context, string eventId, ParticipantDateChoice choice)
+    public static async Task SendEventUpdate(IHubContext<EventsHub> context, string senderConnectionId, string eventId, ParticipantDateChoice choice)
     {
-        await context.Clients.Group(GetGroupName(eventId)).SendAsync("EventUpdate", new
+        await context.Clients.GroupExcept(GetGroupName(eventId), senderConnectionId).SendAsync("EventUpdate", new
         {
             name = "participantDateChoice",
             payload = new
@@ -27,6 +26,24 @@ public class EventsHub : Hub
     {
         if(!string.IsNullOrWhiteSpace(eventId))
             await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(eventId));
+    }
+    
+    public async Task SetParticipantDateChoice(string eventId, ParticipantDateChoice participantDateChoice)
+    {
+        await Clients.GroupExcept(GetGroupName(eventId), Context.ConnectionId).SendAsync("EventUpdate", new
+        {
+            name = "participantDateChoice",
+            payload = new
+            {
+                eventId = eventId,
+                participantDateChoice = new
+                {
+                    dateId = participantDateChoice.DateId,
+                    participantId = participantDateChoice.ParticipantId,
+                    choice = participantDateChoice.Choice
+                }
+            }
+        });
     }
 
     private static string GetGroupName(string eventId) => $@"EventUpdates_{eventId}";

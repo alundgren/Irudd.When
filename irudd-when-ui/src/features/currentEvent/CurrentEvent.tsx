@@ -1,4 +1,11 @@
-import {Choice, CurrentEventState, getCurrentParticipantDateChoice, setExisitingCurrentEvent, setMissingCurrentEvent } from "./currentEventSlice";
+import {
+    Choice,
+    CurrentEventState,
+    getCurrentParticipantDateChoice,
+    setExisitingCurrentEvent,
+    setMissingCurrentEvent,
+    setParticipantDateChoice
+} from "./currentEventSlice";
 import {useDispatch, useSelector} from "react-redux";
 import React, {SyntheticEvent, useEffect } from "react";
 import EventService from "../../services/EventService";
@@ -67,6 +74,7 @@ export function CurrentEvent() {
             let currentChoice = getCurrentParticipantDateChoice(event, dateId, participantId);
             let nextChoice : Choice = currentChoice === 'unknown' ? 'accepted' : (currentChoice === 'accepted' ? 'rejected' : 'unknown');            
             let s = new EventService();
+            dispatch(setParticipantDateChoice({ dateId, participantId, choice: nextChoice }));
             s.setParticipantDateChoice(event.id, dateId, participantId, nextChoice);
         };
 

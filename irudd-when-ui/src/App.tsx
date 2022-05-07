@@ -15,6 +15,7 @@ function App() {
     
     let dispatch = useDispatch();
     
+    //TODO: Move toasts to separate component
     let nowEpoch = DateTime.now().valueOf();
     let toastElements = toasts.filter(x => !x.isHidden).map(toast => {
         const onClose = () => {

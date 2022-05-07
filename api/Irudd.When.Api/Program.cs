@@ -1,6 +1,5 @@
 using Irudd.When.Api.Controllers;
 using Irudd.When.Api.Hubs;
-using Irudd.When.Api.Methods;
 using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.SignalR;
 
@@ -23,9 +22,11 @@ builder.Services.AddCors(options =>
         });
     }
 });
+
+var store = new KeyValueStore();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
-builder.Services.AddSingleton(new KeyValueStore());
+builder.Services.AddSingleton(store);
 
 var app = builder.Build();
 
@@ -46,7 +47,7 @@ app.UseEndpoints(endpoints =>
 
 if (app.Environment.IsDevelopment())
 {
-    CreateEventController.AddTestData(app.Services.GetRequiredService<KeyValueStore>());    
+    store.AddTestData();    
 }
 
 app.Run();

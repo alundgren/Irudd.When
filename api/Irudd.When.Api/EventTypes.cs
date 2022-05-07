@@ -1,4 +1,4 @@
-﻿namespace Irudd.When.Api.Methods
+﻿namespace Irudd.When.Api
 {
     public record NewEvent(
         string Description,

@@ -1,6 +1,6 @@
 import { CreateEventState } from "../features/createEvent/createEventSlice";
 import { Choice, CurrentEventState, ExistingEvent } from "../features/currentEvent/currentEventSlice";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { IEventService, ServerCallback } from "./EventService";
 import { Store } from "@reduxjs/toolkit";
 
@@ -11,8 +11,16 @@ export class ApiEventService implements IEventService {
         }
         this.getAbsoluteUrl = this.getAbsoluteUrl.bind(this);
         this.createNewEvent = this.createNewEvent.bind(this);
+        this.connection = new HubConnectionBuilder()
+            .withUrl(this.getAbsoluteUrl('hubs/events'))
+            .withAutomaticReconnect()
+            .build();
+        this.callback = () => {};
     }
-
+    
+    private connection: HubConnection;
+    private callback: ServerCallback;
+    
     async createNewEvent(data: CreateEventState): Promise<ExistingEvent> {
         let response = await window.fetch(this.getAbsoluteUrl('api/v1/create-event'), {
             method: 'POST',
@@ -44,32 +52,17 @@ export class ApiEventService implements IEventService {
     }
 
     async setParticipantDateChoice(eventId: string, dateId: string, participantId: string, choice: Choice): Promise<void> {
-        let response = await window.fetch(this.getAbsoluteUrl('api/v1/set-participant-date-choice'), {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json;charset=UTF-8',
-            },
-            body: JSON.stringify({
-                EventId: eventId,
-                Choice: {
-                    ParticipantId: participantId,
-                    DateId: dateId,
-                    Choice: choice
-                }
-            }),
-        });
-        if (!response.ok) {
-            throw new Error(response.statusText)
-        }
+        let participantChoice = {
+            ParticipantId: participantId,
+            DateId: dateId,
+            Choice: choice
+        };
+        await this.connection.invoke('SetParticipantDateChoice', eventId, participantChoice);
     }
 
     setServerCallback(callback: ServerCallback, store: Store): void {
-        const connection = new HubConnectionBuilder()
-            .withUrl(this.getAbsoluteUrl('hubs/events'))
-            .withAutomaticReconnect()
-            .build();
-        connection.start().then(_ => {
-            connection.on('EventUpdate', message => {
+        this.connection.start().then(_ => {
+            this.connection.on('EventUpdate', message => {
                 callback(message);
             });
             
@@ -79,7 +72,7 @@ export class ApiEventService implements IEventService {
                 if(!eventId) {
                     return
                 }
-                connection.invoke('SubscribeToEventUpdates', eventId);
+                this.connection.invoke('SubscribeToEventUpdates', eventId);
             };
             let currentEventId = getCurrentEventId();
             if(currentEventId) {

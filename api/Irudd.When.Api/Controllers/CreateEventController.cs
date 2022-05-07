@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using Irudd.When.Api.Methods;
 using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,22 +38,6 @@ namespace Irudd.When.Api.Controllers
         }
 
         //TODO: Move this
-        public static void AddTestData(KeyValueStore store) =>
-            Task.Run(() =>
-                store.SetEvent(new ExistingEvent(
-                    "A424224",
-                    "En lunch",
-                    true,
-                    new List<EventParticipant>
-                    {
-                                    new EventParticipant("p1", "Kalle"),
-                                    new EventParticipant("p2", "Hobbe")
-                    },
-                    new List<EventDate>
-                    {
-                                    new EventDate("d1", "2022-12-21"),
-                                    new EventDate("d2", "2022-12-22")
-                    },
-                    new List<ParticipantDateChoice>())));
+
     }
 }

@@ -44,6 +44,7 @@ function Header() {
             };
             
             const onUrlFocused = (e: React.FocusEvent) => {
+                //TODO: Make sure the toast is only sent once when tabbing out and back
                 let inputElement = e.target as HTMLInputElement;
                 inputElement.select();
                 
