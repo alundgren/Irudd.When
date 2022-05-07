@@ -1,4 +1,8 @@
+using Irudd.When.Api.Controllers;
+using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Methods;
+using Irudd.When.Api.Storage;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +16,19 @@ builder.Services.AddCors(options =>
     {
         options.AddDefaultPolicy(x =>
         {
-            x.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback);
-            x.AllowAnyHeader();
-            x.AllowAnyMethod();
+            x.AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins(builder.Configuration.GetValue<string>("SiteUrl"))
+                .AllowCredentials();
         });
     }
 });
+builder.Services.AddSignalR();
+builder.Services.AddControllers();
+builder.Services.AddSingleton(new KeyValueStore());
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -31,8 +37,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
+app.MapHub<EventsHub>("/hubs/events");
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
-CreateEventMethod.Map(app);
-ExistingEventMethod.Map(app);
+if (app.Environment.IsDevelopment())
+{
+    CreateEventController.AddTestData(app.Services.GetRequiredService<KeyValueStore>());    
+}
 
 app.Run();
