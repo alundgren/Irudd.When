@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { CurrentEventState } from "./features/currentEvent/currentEventSlice";
@@ -13,9 +13,10 @@ let logoStyle = {
 
 function Header() {
     const location = useLocation();
-    let title = '';
-
+ 
     const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent);
+    
+    let [showShare, setShowShare] = useState(false);    
     
     let shareIcon = <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-box-arrow-up" viewBox="0 0 16 16">
         <path fillRule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
@@ -26,25 +27,65 @@ function Header() {
         display: 'inline-block',
         width: '1.5em',
         height: '1.5em',
-        verticalAlign: 'middle',
+        /*
+        verticalAlign: 'middle',        
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundSize: '100%'
+        backgroundSize: '100%',
+        */
+        cursor:'pointer'
     }
-    
+ 
+    let titlePart : JSX.Element;    
     if(location.pathname === '/create' || location.pathname === '/') {
-        title = 'Ny händelse';
-    } else if(location.pathname.startsWith('/event')) {                
-        title = currentEvent.isMissing ? 'Händelsen finns inte' : currentEvent?.event?.description ?? ''
+        titlePart = (<>
+            <div className="flex-grow-1 align-self-center">Ny händelse</div>
+        </>);
+    } else if(location.pathname.startsWith('/event')) {
+        if(currentEvent?.event) {
+            const onShareClicked = (e: SyntheticEvent) => {
+                setShowShare(!showShare);
+            };
+            const onUrlFocused = (e: React.FocusEvent) => {
+                let inputElement = e.target as HTMLInputElement;
+                inputElement.select();
+                navigator.clipboard.writeText(inputElement.value).then(_ => {
+                    console.log('Copied to clipboard')
+                }).catch(_ =>{
+                    /* Ignored: They will have to copy manually */
+                });
+            };
+            let sharePart = <span style={shareIconStyles} className="d-flex justify-content-center align-items-center" onClick={onShareClicked}>{shareIcon}</span> 
+            if(!showShare) {
+                titlePart = (<>
+                    <div className="flex-grow-1 align-self-center">{currentEvent.event?.description}</div>
+                    {sharePart}
+                </>);
+            } else {
+                let url = window.location.href;
+                titlePart = (<>
+                    <div className="flex-grow-1 align-self-center"><input className="form-control" readOnly={true} type="url" value={url} onFocus={onUrlFocused} /></div>
+                    {sharePart}
+                </>);                
+            }
+        } else {
+            let titleText = currentEvent?.isMissing === true 
+                ? 'Händelsen finns inte' 
+                : '';
+            titlePart = (<>
+                <div className="flex-grow-1 align-self-center">{titleText}</div>
+            </>);            
+        }
     } else {
-        title = 'Sidan finns inte'
+        titlePart = (<>
+            <div className="flex-grow-1 align-self-center">Sidan finns inte</div>
+        </>);
     }
     return (
         <div>
             <div className="navbar-light d-flex flex-row p-2 align-self-center fs-3 border-bottom" style={containerStyle}>
                 <img src="/logo.svg" alt="Clock" style={logoStyle} />
-                <div className="flex-grow-1 align-self-center">{title}</div>
-                <span style={shareIconStyles}>{shareIcon}</span>
+                {titlePart}
             </div>
         </div>
     );

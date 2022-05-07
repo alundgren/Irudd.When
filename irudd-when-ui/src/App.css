@@ -1,0 +1,10 @@
+.irudd-when-container {
+    max-width: 800px;
+    gap: 25px;
+}
+
+@media screen and (max-width: 800px) {
+    .irudd-when-container {
+        max-width: 100vw;
+    }
+}

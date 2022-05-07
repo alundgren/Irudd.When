@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react'
+ import { SyntheticEvent } from 'react'
 import IconForButton, { ButtonIconType } from './IconForButton'
 
 export default function InputAddonButton({iconType, buttonType, testId, onClick, isDisabled}: InputAddonButtonProperties) {
