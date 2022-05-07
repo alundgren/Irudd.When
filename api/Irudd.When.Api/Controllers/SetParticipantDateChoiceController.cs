@@ -31,21 +31,8 @@ namespace Irudd.When.Api.Controllers
             await _store.SetEvent(evt);
 
             //TODO: Only send to clients that actually have this event open
-            await _eventsHubContext.Clients.All.SendAsync("EventUpdate", new
-            {
-                name = "participantDateChoice",   
-                payload = new
-                {
-                    eventId = request.EventId,
-                    participantDateChoice = new
-                    {
-                        dateId = request.Choice.DateId,
-                        participantId = request.Choice.ParticipantId,
-                        choice = request.Choice.Choice
-                    }
-                }
-            }, request.Choice);
-
+            await EventsHub.SendEventUpdate(_eventsHubContext, request.EventId, request.Choice);
+            
             return Ok();
         }
     }

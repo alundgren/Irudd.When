@@ -1,6 +1,7 @@
 import { CreateEventState } from "../features/createEvent/createEventSlice";
 import { Choice, ExistingEvent, ExistingEventParticipantDateChoice } from "../features/currentEvent/currentEventSlice";
 import { IEventService, ServerCallback } from "./EventService";
+import { Store } from "@reduxjs/toolkit";
 
 const MockDelayMs = 50;
 
@@ -72,7 +73,7 @@ export default class LocalStorageEventService implements IEventService {
         });
     }
 
-    setServerCallback(callback: ServerCallback): void {
+    setServerCallback(callback: ServerCallback, store: Store): void {
         this.onServerCallback = callback;
     }
 

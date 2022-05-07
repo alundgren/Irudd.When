@@ -1,7 +1,8 @@
 import { CreateEventState } from "../features/createEvent/createEventSlice";
-import { Choice, ExistingEvent } from "../features/currentEvent/currentEventSlice";
+import { Choice, CurrentEventState, ExistingEvent } from "../features/currentEvent/currentEventSlice";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { IEventService, ServerCallback } from "./EventService";
+import { Store } from "@reduxjs/toolkit";
 
 export class ApiEventService implements IEventService {
     constructor(private rootUrl: string) {
@@ -62,7 +63,7 @@ export class ApiEventService implements IEventService {
         }
     }
 
-    setServerCallback(callback: ServerCallback): void {
+    setServerCallback(callback: ServerCallback, store: Store): void {
         const connection = new HubConnectionBuilder()
             .withUrl(this.getAbsoluteUrl('hubs/events'))
             .withAutomaticReconnect()
@@ -71,6 +72,26 @@ export class ApiEventService implements IEventService {
             connection.on('EventUpdate', message => {
                 callback(message);
             });
+            
+            //Subscribe to updates on these events
+            let getCurrentEventId = () => (store.getState()?.currentEvent as CurrentEventState)?.eventId;
+            let joinEventGroup = (eventId : string | null) => {
+                if(!eventId) {
+                    return
+                }
+                connection.invoke('SubscribeToEventUpdates', eventId);
+            };
+            let currentEventId = getCurrentEventId();
+            if(currentEventId) {
+                joinEventGroup(currentEventId);
+            }
+            store.subscribe(() => {
+                let newCurrentEventId = getCurrentEventId();
+                if(currentEventId !== newCurrentEventId) {
+                    currentEventId = newCurrentEventId;
+                    joinEventGroup(currentEventId);
+                }
+            })
         });
     }
 

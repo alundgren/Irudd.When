@@ -16,7 +16,8 @@ export interface IEventService {
     createNewEvent(data: CreateEventState) : Promise<ExistingEvent>;
     loadExistingEvent(eventId: string) : Promise<ExistingEvent | null>;
     setParticipantDateChoice(eventId: string, dateId: string, participantId: string, choice: Choice) : Promise<void>;
-    setServerCallback(callback: ServerCallback) : void;
+    setServerCallback(callback: ServerCallback, store: Store) : void;
+    setServerCallback(callback: ServerCallback, store: Store) : void;
 }
 
 let eventService : IEventService;
@@ -45,7 +46,7 @@ export function connectStoreToServerCallbacks(store: Store) {
                 store.dispatch(setParticipantDateChoice(d.participantDateChoice));
             }
         }
-    });
+    }, store);
 }
 
 //This is a class since I could not get jest.spyOn to work with exporting getEventService and mocking that which is what I wanted to do.
@@ -70,7 +71,7 @@ export default class EventService implements IEventService {
         return this.service.setParticipantDateChoice(eventId, dateId, participantId, choice);
     }
 
-    setServerCallback(callback: ServerCallback) : void {
-        return this.service.setServerCallback(callback);
+    setServerCallback(callback: ServerCallback, store: Store) : void {
+        return this.service.setServerCallback(callback, store);
     }
 }
