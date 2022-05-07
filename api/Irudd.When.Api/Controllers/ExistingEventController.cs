@@ -5,9 +5,9 @@ namespace Irudd.When.Api.Controllers;
 
 public class ExistingEventController : Controller
 {
-    private readonly KeyValueStore _store;
+    private readonly EventStore _store;
 
-    public ExistingEventController(KeyValueStore store)
+    public ExistingEventController(EventStore store)
     {
         _store = store;
     }

@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     }
 });
 
-var store = new KeyValueStore();
+var store = new EventStore();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddSingleton(store);

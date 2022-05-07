@@ -2,20 +2,30 @@
 
 namespace Irudd.When.Api.Storage
 {
-    public class KeyValueStore
+    public class EventStore
     {
-        private static readonly ConcurrentDictionary<string, ExistingEvent> Storage = new ();
+        private readonly IKeyValueStore _keyValueStore;
+
+        public EventStore(IKeyValueStore keyValueStore)
+        {
+            _keyValueStore = keyValueStore;
+        }
+
+        public EventStore() : this(new InMemoryKeyValueStore())
+        {
+            
+        }
 
         public async Task SetEvent(ExistingEvent evt)
         {
             await Task.Delay(50);
-            Storage[evt.Id] = evt;
+            await _keyValueStore.Set(evt.Id, evt);
         }
 
         public async Task<ExistingEvent?> GetEvent(string eventId)
         {
             await Task.Delay(50);
-            return Storage.TryGetValue(eventId, out var value) ? value : null;
+            return await _keyValueStore.Get<ExistingEvent>(eventId);
         }
         
         public void AddTestData() =>
