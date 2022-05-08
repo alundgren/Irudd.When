@@ -6,11 +6,11 @@ namespace Irudd.When.Api.Controllers
 {
     public class CreateEventController : Controller
     {
-        private readonly EventStoreOperation _storeOperation;
+        private readonly EventStore _store;
 
-        public CreateEventController(EventStoreOperation storeOperation)
+        public CreateEventController(EventStore store)
         {
-            _storeOperation = storeOperation;
+            _store = store;
         }
 
         [HttpPost("/api/v1/create-event")]
@@ -25,7 +25,7 @@ namespace Irudd.When.Api.Controllers
                 new List<EventDate>(),
                 new List<ParticipantDateChoice>());
 
-            await _storeOperation.SetEvent(evt);
+            await _store.SetEvent(evt);
 
             return evt;
         }
@@ -36,8 +36,5 @@ namespace Irudd.When.Api.Controllers
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[RandomNumberGenerator.GetInt32(s.Length)]).ToArray());
         }
-
-        //TODO: Move this
-
     }
 }

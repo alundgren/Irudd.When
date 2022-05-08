@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     }
 });
 
-builder.Services.AddScoped<EventStoreOperation>();
+builder.Services.AddScoped<EventStore>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<EventsContext>((_, options) =>
@@ -54,7 +54,7 @@ using (var serviceScope = app.Services.CreateScope())
 
         if (app.Environment.IsDevelopment())
         {
-            var storeOperation = serviceScope.ServiceProvider.GetService<EventStoreOperation>();
+            var storeOperation = serviceScope.ServiceProvider.GetService<EventStore>();
             if (storeOperation != null)
             {
                 await storeOperation.AddTestData();    

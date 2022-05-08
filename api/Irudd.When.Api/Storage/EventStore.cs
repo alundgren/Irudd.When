@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 
 namespace Irudd.When.Api.Storage
 {
-    public class EventStoreOperation
+    public class EventStore
     {
         private readonly EventsContext _context;
-        private const int CurrentModelVerison = 2022050801;
+        private const int CurrentModelVersion = 2022050801;
         
-        public EventStoreOperation(EventsContext context)
+        public EventStore(EventsContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace Irudd.When.Api.Storage
                 {
                     EventId = evt.Id,
                     DeleteAfterEpoch = DateTimeOffset.UtcNow.AddDays(30).ToUnixTimeMilliseconds(),
-                    SerializedModelVersion = CurrentModelVerison,
+                    SerializedModelVersion = CurrentModelVersion,
                     SerializedModel = JsonConvert.SerializeObject(evt)
                 });
             }
