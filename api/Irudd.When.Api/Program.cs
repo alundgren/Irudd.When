@@ -1,12 +1,9 @@
-using Irudd.When.Api.Controllers;
 using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Storage;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -23,10 +20,13 @@ builder.Services.AddCors(options =>
     }
 });
 
-var store = new EventStore();
+builder.Services.AddScoped<EventStoreOperation>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
-builder.Services.AddSingleton(store);
+builder.Services.AddDbContext<EventsContext>((_, options) =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("EventsContext"));
+});
 
 var app = builder.Build();
 
@@ -45,9 +45,22 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-if (app.Environment.IsDevelopment())
+using (var serviceScope = app.Services.CreateScope())
 {
-    store.AddTestData();    
+    var context = serviceScope.ServiceProvider.GetService<EventsContext>();
+    if (context != null)
+    {
+        EventsContext.EnsureDatabaseCreated(context);
+
+        if (app.Environment.IsDevelopment())
+        {
+            var storeOperation = serviceScope.ServiceProvider.GetService<EventStoreOperation>();
+            if (storeOperation != null)
+            {
+                await storeOperation.AddTestData();    
+            }
+        }
+    }
 }
 
 app.Run();

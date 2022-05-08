@@ -5,11 +5,11 @@ namespace Irudd.When.Api.Controllers;
 
 public class ExistingEventController : Controller
 {
-    private readonly EventStore _store;
+    private readonly EventStoreOperation _storeOperation;
 
-    public ExistingEventController(EventStore store)
+    public ExistingEventController(EventStoreOperation storeOperation)
     {
-        _store = store;
+        _storeOperation = storeOperation;
     }
     
     [HttpGet("/api/v1/event/{id}")]
@@ -17,7 +17,7 @@ public class ExistingEventController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(string id)
     {
-        var evt = await _store.GetEvent(id);
+        var evt = await _storeOperation.GetEvent(id);
         return evt != null 
             ? Ok(evt) 
             : NotFound();

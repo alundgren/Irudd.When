@@ -12,7 +12,7 @@
         bool DateOnly,
         List<EventParticipant> Participants,
         List<EventDate> Dates,
-        List<ParticipantDateChoice> participantDateChoices);
+        List<ParticipantDateChoice> ParticipantDateChoices);
 
     public record EventParticipant(string Id, string Name);
     public record EventDate(string Id, string Date);

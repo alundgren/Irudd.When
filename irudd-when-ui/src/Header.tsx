@@ -16,7 +16,7 @@ function Header() {
     const location = useLocation();
  
     const currentEvent = useSelector((x : { currentEvent : CurrentEventState }) => x.currentEvent);
-    
+
     let dispatch = useDispatch();
     let [showShare, setShowShare] = useState(false);    
     
@@ -38,21 +38,24 @@ function Header() {
             <div className="flex-grow-1 align-self-center">Ny händelse</div>
         </>);
     } else if(location.pathname.startsWith('/event')) {
+        let shareUrl = window.location.href;
+        
         if(currentEvent?.event) {
             const onShareClicked = (e: SyntheticEvent) => {
+                if(!showShare) {
+
+                    navigator.clipboard.writeText(shareUrl).then(_ => {
+                        dispatch(showToast('Copied to clipboard'));
+                    }).catch(_ =>{
+                        /* Ignored: They will have to copy manually */
+                    });                    
+                }
                 setShowShare(!showShare);
             };
             
             const onUrlFocused = (e: React.FocusEvent) => {
-                //TODO: Make sure the toast is only sent once when tabbing out and back
                 let inputElement = e.target as HTMLInputElement;
-                inputElement.select();
-                
-                navigator.clipboard.writeText(inputElement.value).then(_ => {
-                    dispatch(showToast('Copied to clipboard'));
-                }).catch(_ =>{
-                    /* Ignored: They will have to copy manually */
-                });
+                inputElement.select();       
             };
             let sharePart = <span style={shareIconStyles} className="d-flex justify-content-center align-items-center" onClick={onShareClicked}>{shareIcon}</span> 
             if(!showShare) {
@@ -61,9 +64,8 @@ function Header() {
                     {sharePart}
                 </>);
             } else {
-                let url = window.location.href;
                 titlePart = (<>
-                    <div className="flex-grow-1 align-self-center"><input className="form-control" readOnly={true} type="url" value={url} onFocus={onUrlFocused} /></div>
+                    <div className="flex-grow-1 align-self-center"><input className="form-control" readOnly={true} type="url" value={shareUrl} onFocus={onUrlFocused} /></div>
                     {sharePart}
                 </>);                
             }

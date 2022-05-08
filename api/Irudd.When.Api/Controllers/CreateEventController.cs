@@ -6,11 +6,11 @@ namespace Irudd.When.Api.Controllers
 {
     public class CreateEventController : Controller
     {
-        private readonly EventStore _store;
+        private readonly EventStoreOperation _storeOperation;
 
-        public CreateEventController(EventStore store)
+        public CreateEventController(EventStoreOperation storeOperation)
         {
-            _store = store;
+            _storeOperation = storeOperation;
         }
 
         [HttpPost("/api/v1/create-event")]
@@ -21,11 +21,11 @@ namespace Irudd.When.Api.Controllers
                 id,
                 newEvent.Description,
                 newEvent.DateOnly,
-                newEvent.Participants ?? new List<EventParticipant>(),
-                new List<EventDate>() ?? new List<EventDate>(),
+                newEvent.Participants,
+                new List<EventDate>(),
                 new List<ParticipantDateChoice>());
 
-            await _store.SetEvent(evt);
+            await _storeOperation.SetEvent(evt);
 
             return evt;
         }
