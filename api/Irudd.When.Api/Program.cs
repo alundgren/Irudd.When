@@ -4,6 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if(builder.Environment.IsProduction())
+{
+    builder.WebHost.UseIISIntegration();
+    builder.WebHost.UseKestrel();
+}
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
