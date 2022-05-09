@@ -1,4 +1,3 @@
-using Irudd.When.Api;
 using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,6 @@ builder.Services.AddDbContext<EventsContext>((_, options) =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("EventsContext"));
 });
-builder.Services.AddSingleton<IHostLifetime, NoopConsoleLifetime>();
 
 var app = builder.Build();
 
