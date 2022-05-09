@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY . ./
+COPY api/Irudd.When.Api/. ./
 RUN dotnet restore
 
 # copy everything else and build app
