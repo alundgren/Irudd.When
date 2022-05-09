@@ -36,7 +36,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if(!app.Environment.IsProduction())
+{
+    //In production it runs behind a proxy so ssl termination is done elsewhere
+    app.UseHttpsRedirection();
+}
+
 app.UseCors();
 app.MapHub<EventsHub>("/hubs/events");
 app.UseRouting();
