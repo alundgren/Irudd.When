@@ -1,5 +1,6 @@
 using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Storage;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,12 +24,20 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<EventStore>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 builder.Services.AddDbContext<EventsContext>((_, options) =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("EventsContext"));
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
