@@ -13,7 +13,7 @@ namespace Irudd.When.Api.Controllers
             _store = store;
         }
 
-        [HttpPost("/api/v1/create-event")]
+        [HttpPost("api/v1/create-event")]
         public async Task<ExistingEvent> Post([FromBody] NewEvent newEvent)
         {
             var id = CreateRandomUrlSafeString(7);

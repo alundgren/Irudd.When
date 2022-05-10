@@ -1,5 +1,6 @@
 using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Storage;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<EventStore>();
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 builder.Services.AddDbContext<EventsContext>((_, options) =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("EventsContext"));
@@ -30,15 +37,22 @@ builder.Services.AddDbContext<EventsContext>((_, options) =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if(!app.Environment.IsProduction())
+{
+    //In production it runs behind a proxy so ssl termination is done elsewhere
+    app.UseHttpsRedirection();
+}
+
 app.UseCors();
-app.MapHub<EventsHub>("/hubs/events");
+app.MapHub<EventsHub>("hubs/events");
 app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
@@ -52,13 +66,10 @@ using (var serviceScope = app.Services.CreateScope())
     {
         EventsContext.EnsureDatabaseCreated(context);
 
-        if (app.Environment.IsDevelopment())
+        var storeOperation = serviceScope.ServiceProvider.GetService<EventStore>();
+        if (storeOperation != null)
         {
-            var storeOperation = serviceScope.ServiceProvider.GetService<EventStore>();
-            if (storeOperation != null)
-            {
-                await storeOperation.AddTestData();    
-            }
+            await storeOperation.AddTestData();
         }
     }
 }
