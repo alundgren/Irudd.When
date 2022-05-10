@@ -1,9 +1,17 @@
+using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Irudd.When.Api.Hubs;
 
 public class EventsHub : Hub
 {
+    private readonly EventStore _store;
+
+    public EventsHub(EventStore store)
+    {
+        _store = store;
+    }
+    
     public static async Task SendEventUpdate(IHubContext<EventsHub> context, string senderConnectionId, string eventId, ParticipantDateChoice choice)
     {
         await context.Clients.GroupExcept(GetGroupName(eventId), senderConnectionId).SendAsync("EventUpdate", new
@@ -30,6 +38,11 @@ public class EventsHub : Hub
     
     public async Task SetParticipantDateChoice(string eventId, ParticipantDateChoice participantDateChoice)
     {
+        var evt = await _store.GetEvent(eventId);
+        if (evt == null)
+            return;
+        evt.ParticipantDateChoices.Add(participantDateChoice);
+        await _store.SetEvent(evt);
         await Clients.GroupExcept(GetGroupName(eventId), Context.ConnectionId).SendAsync("EventUpdate", new
         {
             name = "participantDateChoice",
