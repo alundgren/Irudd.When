@@ -57,46 +57,12 @@ using (var serviceScope = app.Services.CreateScope())
     {
         EventsContext.EnsureDatabaseCreated(context);
 
-        if (app.Environment.IsDevelopment())
+        var storeOperation = serviceScope.ServiceProvider.GetService<EventStore>();
+        if (storeOperation != null)
         {
-            var storeOperation = serviceScope.ServiceProvider.GetService<EventStore>();
-            if (storeOperation != null)
-            {
-                await storeOperation.AddTestData();    
-            }
+            await storeOperation.AddTestData();
         }
     }
 }
 
-if(app.Environment.IsProduction())
-{
-    try
-    {
-        Console.CancelKeyPress += (sender, eventArgs) =>
-        {
-            app.Logger.LogInformation("Console shutdown supressed");
-            // Don't terminate the process immediately, wait for the Main thread to exit gracefully.
-            eventArgs.Cancel = true;
-        };
-        /*
-         * Caprover which is used to host this auto triggers app shutdown instantly but this catch seems make it have no effect.
-         * No clue why or how this works or why it triggers. 
-         * This messages show instantly Application is shutting down... as if Ctrl + C has been used but
-         * even when using StartAsync and WaitForShutdownAsync with a cancellation token that never triggers
-         * it still dies without the catch. But no error is logged so how the catch can have any effect ... no clue.
-         */
-        var cancellationTokenSource1 = new CancellationTokenSource();
-        await app.StartAsync(cancellationTokenSource1.Token);
-        var cancellationTokenSource2 = new CancellationTokenSource();
-        await app.WaitForShutdownAsync(cancellationTokenSource2.Token);
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "Run error");
-    }
-
-}
-else
-{
-    app.Run();
-}
+app.Run();
