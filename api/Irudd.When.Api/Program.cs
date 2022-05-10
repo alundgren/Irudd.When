@@ -79,7 +79,10 @@ if(app.Environment.IsProduction())
          * even when using StartAsync and WaitForShutdownAsync with a cancellation token that never triggers
          * it still dies without the catch. But no error is logged so how the catch can have any effect ... no clue.
          */
-        app.Run();
+        var cancellationTokenSource1 = new CancellationTokenSource();
+        await app.StartAsync(cancellationTokenSource1.Token);
+        var cancellationTokenSource2 = new CancellationTokenSource();
+        await app.WaitForShutdownAsync(cancellationTokenSource2.Token);
     }
     catch (Exception ex)
     {

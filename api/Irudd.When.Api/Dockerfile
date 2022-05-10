@@ -7,7 +7,7 @@ RUN dotnet restore
 
 # copy everything else and build app
 WORKDIR /app
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
