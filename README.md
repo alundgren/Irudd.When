@@ -7,6 +7,7 @@ Meeting scheduler app. Main focus is learning react.
 ## Deploy api
 
 >> npm install -g caprover
+>> caprover login
 >> caprover deploy
 
 ## Api nginx config
