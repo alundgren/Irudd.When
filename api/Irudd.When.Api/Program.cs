@@ -68,4 +68,26 @@ using (var serviceScope = app.Services.CreateScope())
     }
 }
 
-app.Run();
+if(app.Environment.IsProduction())
+{
+    try
+    {
+        /*
+         * Caprover which is used to host this auto triggers app shutdown instantly but this catch seems make it have no effect.
+         * No clue why or how this works or why it triggers. 
+         * This messages show instantly Application is shutting down... as if Ctrl + C has been used but
+         * even when using StartAsync and WaitForShutdownAsync with a cancellation token that never triggers
+         * it still dies without the catch. But no error is logged so how the catch can have any effect ... no clue.
+         */
+        app.Run();
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Run error");
+    }
+
+}
+else
+{
+    app.Run();
+}
