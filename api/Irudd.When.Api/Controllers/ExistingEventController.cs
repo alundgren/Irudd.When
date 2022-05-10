@@ -12,7 +12,7 @@ public class ExistingEventController : Controller
         _store = store;
     }
     
-    [HttpGet("/api/v1/event/{id}")]
+    [HttpGet("api/v1/event/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExistingEvent))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(string id)

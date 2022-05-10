@@ -43,7 +43,7 @@ if(!app.Environment.IsProduction())
 }
 
 app.UseCors();
-app.MapHub<EventsHub>("/hubs/events");
+app.MapHub<EventsHub>("hubs/events");
 app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
