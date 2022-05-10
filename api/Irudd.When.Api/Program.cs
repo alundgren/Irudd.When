@@ -72,6 +72,12 @@ if(app.Environment.IsProduction())
 {
     try
     {
+        Console.CancelKeyPress += (sender, eventArgs) =>
+        {
+            app.Logger.LogInformation("Console shutdown supressed");
+            // Don't terminate the process immediately, wait for the Main thread to exit gracefully.
+            eventArgs.Cancel = true;
+        };
         /*
          * Caprover which is used to host this auto triggers app shutdown instantly but this catch seems make it have no effect.
          * No clue why or how this works or why it triggers. 
