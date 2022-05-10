@@ -64,7 +64,7 @@ function PickEventDates() {
     const newDateClasses = ['form-control', 'flex-grow-1', newDateFilledInAndInvalid ? 'is-invalid' : ''];
 
     const onNewDateKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if(e.key !== 'Enter') {
+        if(e.key !== 'Enter' || !isNewDateValid) {
             return;
         }
         e.preventDefault();

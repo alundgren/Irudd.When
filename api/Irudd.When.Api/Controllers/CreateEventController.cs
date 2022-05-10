@@ -22,7 +22,7 @@ namespace Irudd.When.Api.Controllers
                 newEvent.Description,
                 newEvent.DateOnly,
                 newEvent.Participants,
-                new List<EventDate>(),
+                newEvent.Dates,
                 new List<ParticipantDateChoice>());
 
             await _store.SetEvent(evt);
