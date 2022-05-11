@@ -15,11 +15,9 @@ export class ApiEventService implements IEventService {
             .withUrl(this.getAbsoluteUrl('hubs/events'))
             .withAutomaticReconnect()
             .build();
-        this.callback = () => {};
     }
     
     private connection: HubConnection;
-    private callback: ServerCallback;
     
     async createNewEvent(data: CreateEventState): Promise<ExistingEvent> {
         let response = await window.fetch(this.getAbsoluteUrl('api/v1/create-event'), {

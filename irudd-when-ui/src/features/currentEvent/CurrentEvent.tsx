@@ -1,6 +1,7 @@
 import {
     Choice,
     CurrentEventState,
+    ExistingEventDate,
     getCurrentParticipantDateChoice,
     setExisitingCurrentEvent,
     setMissingCurrentEvent,
@@ -48,11 +49,24 @@ export function CurrentEvent() {
     if(currentEvent.event) {
         let event = currentEvent.event;
         let dateService = new DateService(locale, event.dateOnly);
+
+        let getEventDateStatusIndicatorClass = (d: ExistingEventDate) => {
+            let isAccepted = true
+            for(let p of event.participants) {
+                let choice = getCurrentParticipantDateChoice(event, d.id, p.id)
+                if(choice === 'rejected') {
+                    return 'fw-light'
+                } else if(choice !== 'accepted') {
+                    isAccepted = false
+                }
+            }
+            return isAccepted ? 'fw-bold' : ''
+        }
         
         let dateRow = (
             <div className="d-flex flex-grow-1 flex-row justify-content-between">
                 {event.dates.map(x => (
-                    <div style={timeColumnStyle} className={timeColumnClasses} key={"d" + x.id}>
+                    <div style={timeColumnStyle} className={timeColumnClasses + ' ' + getEventDateStatusIndicatorClass(x)} key={"d" + x.id}>
                         {dateService.formatForDisplay(x.date, 'dateOnly')}
                     </div>
                 ))}
@@ -62,7 +76,7 @@ export function CurrentEvent() {
         let timeRow = !event.dateOnly ? (
             <div className="d-flex flex-grow-1 flex-row justify-content-between">
                 {event.dates.map(x => (
-                    <div style={timeColumnStyle} className={timeColumnClasses} key={"t" + x.id}>
+                    <div style={timeColumnStyle} className={timeColumnClasses + ' ' + getEventDateStatusIndicatorClass(x)} key={"t" + x.id}>
                         {dateService.formatForDisplay(x.date, 'timeOnly')}
                     </div>
                 ))}
