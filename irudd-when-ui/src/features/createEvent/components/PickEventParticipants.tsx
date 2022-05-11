@@ -61,7 +61,7 @@ function PickEventParticipants() {
                 <input type="text" className="form-control" placeholder="Namn på nästa deltagare" 
                     data-testid="addInput" value={newParticipantName} onChange={onNewParticipantNameChanged} 
                     onKeyDown={onNewParticipantNameKeyDown} />
-                <InputAddonButton iconType='addPerson' buttonType='secondary' 
+                <InputAddonButton iconType='addPerson' buttonType='primary' 
                     testId="addButton" onClick={onAddParticipant} isDisabled={!newParticipantName} />
             </div>
         </div>

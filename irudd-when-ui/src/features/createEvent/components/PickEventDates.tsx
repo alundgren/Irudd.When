@@ -5,6 +5,7 @@ import { DateService } from '../../../services/DateService';
 import { I18nState } from '../../i18n/i18nSlice';
 import { addDate, CreateEventState, removeDate, setDate, setNewDate } from '../createEventSlice';
 import InputAddonButton from '../../../components/InputAddonButton';
+import { DateTime } from 'luxon';
 
 let containerStyle = {
     gap: '10px',
@@ -71,17 +72,23 @@ function PickEventDates() {
         if(e.currentTarget.value) {
             dispatchAddDate();
         }
-    };    
+    };
+
+    const onShowCalendar = (e: React.SyntheticEvent) => {
+        e?.preventDefault();
+        let date = dateService.formatDateForEdit(DateTime.now());
+        dispatch(setNewDate(date));
+    }
 
     return (
         <div className="d-flex flex-column" style={containerStyle}>
             <h3>Tider</h3>
             {dateElements}
             <div className="input-group flex-grow-1">
-                <InputAddonButton iconType='showCalendar' buttonType='secondary' data-testid="showCalendar" isDisabled={true} />
+                <InputAddonButton iconType='showCalendar' buttonType='info' data-testid="showCalendar" onClick={onShowCalendar} />
                 <input type="text" className={classes(newDateClasses)} placeholder={dateService.getDateFormat('full')}
                     data-testid="addInput" value={newDate} onChange={onNewDateChanged} onKeyDown={onNewDateKeyDown} />
-                <InputAddonButton iconType='addTime' buttonType='secondary' testId="addButton" isDisabled={!isNewDateValid}
+                <InputAddonButton iconType='addTime' buttonType='primary' testId="addButton" isDisabled={!isNewDateValid}
                     onClick={onAddDate} />
             </div>
         </div>

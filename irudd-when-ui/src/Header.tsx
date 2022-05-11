@@ -85,7 +85,7 @@ function Header() {
     return (
         <div>
             <div className="navbar-light d-flex flex-row p-2 align-self-center fs-3 border-bottom" style={containerStyle}>
-                <img src="/logo.svg" alt="Clock" style={logoStyle} />
+                <a style={logoStyle} href="/"><img src="/logo.svg" alt="Clock" style={logoStyle} /></a>                
                 {titlePart}
             </div>
         </div>

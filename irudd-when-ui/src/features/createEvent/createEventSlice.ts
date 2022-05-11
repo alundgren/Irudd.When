@@ -76,10 +76,10 @@ const createEventSlice = createSlice({
         },
         setDateOnly(state, action: PayloadAction<boolean>) {
             state.dateOnly = action.payload;
-        }, 
+        },
         resetCreate(state) {
             state = initialState;
-        }        
+        }
     }
 })
 

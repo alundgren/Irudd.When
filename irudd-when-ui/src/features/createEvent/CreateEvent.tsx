@@ -2,13 +2,14 @@ import EditEventDescription from './components/EditEventDescription';
 import PickEventParticipants from './components/PickEventParticipants';
 import PickEventDates from './components/PickEventDates';
 import SelectDateOrDateTime from './components/SelectDateOrDateTime'
-import { CreateEventState } from './createEventSlice';
+import { CreateEventState, resetCreate } from './createEventSlice';
 import { useSelector } from 'react-redux';
 import { DateService } from '../../services/DateService';
 import { I18nState } from '../i18n/i18nSlice';
 import React, { useState } from 'react';
 import EventService from '../../services/EventService';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 let wrapperStyle = {
     gap: 30,
@@ -21,6 +22,7 @@ let singleLineRowStyle = {
 function CreateEvent() {
     const locale = useSelector((x: { i18n: I18nState }) => x.i18n.locale);
     const create = useSelector((x : { createEvent: CreateEventState }) => x.createEvent);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     
     let isValid = true;
@@ -45,7 +47,8 @@ function CreateEvent() {
         let eventService = new EventService();
         let event = await eventService.createNewEvent(create);
         setIsCreating(false);
-        navigate('/event/' + event.id);        
+        dispatch(resetCreate());
+        navigate('/event/' + event.id);
     };
 
     return (

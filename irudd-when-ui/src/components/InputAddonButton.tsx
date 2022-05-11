@@ -10,7 +10,7 @@ export default function InputAddonButton({iconType, buttonType, testId, onClick,
 }
 
 interface InputAddonButtonProperties extends ButtonIconType {
-    buttonType: 'danger' | 'secondary'
+    buttonType: 'danger' | 'secondary' | 'primary' | 'info'
     testId?: string
     onClick?: (e: SyntheticEvent) => void
     isDisabled?:boolean
