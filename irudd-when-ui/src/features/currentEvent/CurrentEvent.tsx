@@ -34,11 +34,7 @@ export function CurrentEvent() {
             });
         }
     }, [routeEventId, currentEvent, dispatch])
-    
-    //http://localhost:3000/event/e9a8wa18dh2sw
-    let containerStyle = {
-        
-    }
+
     let timeColumnStyle = {
         width: 100
     }
@@ -133,7 +129,7 @@ export function CurrentEvent() {
         </React.Fragment>));
 
         result = (
-            <div className="d-flex flex-grow-1 p-2 flex-column" style={containerStyle}>
+            <div className="d-flex flex-grow-1 p-2 flex-column">
                 {dateRow}
                 {timeRow}
                 {participants}
