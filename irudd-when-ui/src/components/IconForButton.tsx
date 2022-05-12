@@ -1,5 +1,5 @@
 export interface ButtonIconType {
-    iconType: 'addPerson' | 'removePerson' | 'addTime' | 'removeTime' | 'showCalendar' | 'pendingAnswer' | 'acceptedAnswer' | 'rejectedAnswer'
+    iconType: 'addPerson' | 'removePerson' | 'addTime' | 'removeTime' | 'showCalendar' | 'pendingAnswer' | 'acceptedAnswer' | 'rejectedAnswer' | 'showClock'
 }
 
 let addPersonIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-plus" viewBox="0 0 16 16">
@@ -33,6 +33,14 @@ let smallCrossIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 </svg>
 
+let clockIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clock" viewBox="0 0 16 16">
+    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+</svg>
+
+//https://icons.getbootstrap.com/ for more
+
+
 function IconForButton({iconType}: ButtonIconType) {
     if(iconType === 'addPerson')
         return addPersonIcon
@@ -48,6 +56,8 @@ function IconForButton({iconType}: ButtonIconType) {
         return checkIcon
     else if(iconType === 'rejectedAnswer')
         return smallCrossIcon
+    else if(iconType === 'showClock')
+        return clockIcon
     else
         return (null)
 }
