@@ -53,18 +53,6 @@ describe('Pick event dates', () => {
         expect(await screen.queryAllByTestId('dateContainer')).toHaveLength(1);
     });    
 
-    test('new date input is cleared after adding a date', async () => {
-        render(
-            <Provider store={store}>
-                <PickEventDates />
-            </Provider>
-        );
-        const addInput = await screen.findByTestId('addInput') as HTMLInputElement;
-        userEvent.type(addInput, '2012-12-24{enter}');
-
-        expect(addInput.value).toBe('');
-    });
-
     test('can remove dates', async () => {
         store.dispatch(addDate('2012-12-24'));
         render(
@@ -90,5 +78,34 @@ describe('Pick event dates', () => {
         userEvent.type(editInput, '2022-12-25');
 
         expect(store.getState().createEvent.dates[0].date).toBe('2022-12-25');
-    });    
+    });
+
+    test('when dateOnly = true adding a date increments the new date by one day to allow adding more easily', async () => {
+        render(
+            <Provider store={store}>
+                <PickEventDates />
+            </Provider>
+        );
+        const addInput = await screen.findByTestId('addInput');
+        userEvent.type(addInput, '2012-12-24');
+        const addButton = await screen.findByTestId('addButton');
+        userEvent.click(addButton);
+        userEvent.click(addButton);
+        expect(store.getState().createEvent.dates[1].date).toEqual('2012-12-25');
+    });
+
+    test('when dateOnly = false adding a date increments the new date by 30 minutes to allow adding more easily', async () => {
+        store.dispatch(setDateOnly(false));
+        render(
+            <Provider store={store}>
+                <PickEventDates />
+            </Provider>
+        );
+        const addInput = await screen.findByTestId('addInput');
+        userEvent.type(addInput, '2012-12-24 12:00');
+        const addButton = await screen.findByTestId('addButton');
+        userEvent.click(addButton);
+        userEvent.click(addButton);
+        expect(store.getState().createEvent.dates[1].date).toEqual('2012-12-24 12:30');
+    });      
 });

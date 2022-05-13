@@ -41,9 +41,12 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     }
     
     const dispatchAddDate = () => {
-        dispatch(setNewDate(''));
+        //Increment by one day or 30 minutes depending on dateonly so you can just keep hitting add and get something that could be useful
+        let parsedDate = dateService.parse(date);
+        let dateAfter = dateService.formatDateForEdit(parsedDate.plus(createEvent.dateOnly ? { days: 1 } : { minutes: 30 }))
+        dispatch(setNewDate(dateAfter));
         dispatch(addDate(date));
-    }   
+    }
 
     const onDateAction = () => {
         if(isEdit) {
