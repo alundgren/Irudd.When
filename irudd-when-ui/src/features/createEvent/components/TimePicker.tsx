@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactSlider from 'react-slider';
 import './TimePicker.scss';
 
 function TimePicker() {
@@ -12,9 +13,8 @@ function TimePicker() {
     let hourMarks = positions.map(p => (
         <div className="hour-mark"></div>
     ));
-//https://codepen.io/jaromvogel/pen/aNPRwG
-    return (
-        <div className="timepicker">
+    /*
+            <div className="timepicker">
             <div className="pm"> 
                 <div className="timepicker-container-outer">
                     <div className="timepicker-container-inner">
@@ -32,6 +32,14 @@ function TimePicker() {
                 </div>
             </div>
         </div>
+    */
+//https://codepen.io/jaromvogel/pen/aNPRwG
+    return (
+        <ReactSlider
+            className="horizontal-slider"
+            thumbClassName="example-thumb"
+            trackClassName="example-track"
+            renderThumb={(props : any, state : { index: number, value: number, valueNow: number }) => <div {...props}>{state.valueNow}</div>}/>
     )
 }
 

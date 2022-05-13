@@ -8,6 +8,7 @@ import InputAddonButton from '../../../components/InputAddonButton';
 import { DateTime } from 'luxon';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import TimePicker from './TimePicker';
 
 export interface SingleDateOrDateTimeEditorProperties {
     isEdit: boolean
@@ -105,12 +106,13 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     
     if(editorMode === 'calendar') {
         editor = (
-            <div>
+            <div className="d-flex flex-column">
+                <TimePicker />
                 <Calendar onChange={onCalendarDateChanged} value={calendarDate} locale={locale} />
             </div>
         );
     } else if(editorMode === 'clock') {
-
+        
     }
 
     return (

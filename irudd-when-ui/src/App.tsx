@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreSlices } from "./store";
 import { DateTime } from "luxon";
 import { hideToast } from "./features/toasts/toastsSlice";
-import TimePicker from './features/createEvent/components/TimePicker';
 
 function App() {
     let toasts = useSelector((x: StoreSlices) => x.toasts.toasts);
@@ -31,7 +30,6 @@ function App() {
     
     return (
         <div className="container-fluid d-flex flex-column bg-light p-3 vh-100 irudd-when-container">
-            <TimePicker />
             <BrowserRouter>
                 <Header />
                 <div className="d-flex flex-grow-1 justify-content-center align-items-start">
