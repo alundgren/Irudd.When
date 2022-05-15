@@ -8,6 +8,7 @@
 - Allow editing active events.
 - Show a preview of the event while creting where choices can be prefilled.
 - Clearer way of indicating winners/losers.
+- Finetuning buttons for the time editor
 
 ## Deploy
 
