@@ -1,43 +1,41 @@
-.horizontal-slider {
-    width: 100%;
-    max-width: 500px;
-    height: 20px;
-    margin: auto;
-  }
-  
-  .example-thumb {
-    cursor: pointer;
-    position: absolute;
-    z-index: 100;
-    background: #ffffff;
-    border: 5px solid #3774ff;
-    border-radius: 100%;
-    display: block;
-    box-shadow: 0 0 2px 0 rgb(0 0 0 / 44%);
-  }
-  
-  .example-thumb.active {
-    background-color: grey;
-  }
-  
-  .example-track {
-    position: relative;
-    background: #ddd;
-  }
-  
-  .example-track.example-track-0 {
-    background: #83a9ff;
-  }
-  
-  .horizontal-slider .example-track {
-    top: 20px;
-    height: 4px;
-  }
-  
-  .horizontal-slider .example-thumb {
-    top: 12px;
-    width: 10px;
-    outline: none;
-    height: 10px;
-    line-height: 38px;
-  }
+$calendarWidth: 350px;
+$standardBlue: rgb(16, 135, 255);
+.clock-slider {
+  width: $calendarWidth;
+  max-width: $calendarWidth;
+  height: 50px;
+  border: 1px solid grey;
+}
+.clock-thumb {
+  font-size: 0.9em;
+  text-align: center;
+  background-color: $standardBlue;
+  color: white;
+  cursor: pointer;
+  border: 5px solid $standardBlue;
+  box-sizing: border-box;
+  border-radius: 25px;
+}
+.clock-thumb.active {
+  background-color: $standardBlue;
+}
+.clock-track {
+  position: relative;
+  background: $standardBlue;
+}
+.clock-track.clock-track-1 {
+  background: $standardBlue;
+}
+.clock-track.clock-track-2 {
+  background: $standardBlue;
+}
+.clock-slider .clock-track {
+  top: 20px;
+  height: 10px;
+}
+.clock-slider .clock-thumb {
+  top: 1px;
+  width: 50px;
+  height: 48px;
+  line-height: 38px;
+}

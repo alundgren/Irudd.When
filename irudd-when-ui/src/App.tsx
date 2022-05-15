@@ -29,7 +29,7 @@ function App() {
     });
     
     return (
-        <div className="container-fluid d-flex flex-column bg-light p-3 vh-100 irudd-when-container">
+        <div className="container-fluid d-flex flex-column bg-light p-3 irudd-when-container">
             <BrowserRouter>
                 <Header />
                 <div className="d-flex flex-grow-1 justify-content-center align-items-start">

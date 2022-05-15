@@ -8,7 +8,7 @@ import InputAddonButton from '../../../components/InputAddonButton';
 import { DateTime } from 'luxon';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import TimePicker from './TimePicker';
+import TimePicker, { TimePickerTime } from './TimePicker';
 
 export interface SingleDateOrDateTimeEditorProperties {
     isEdit: boolean
@@ -18,8 +18,7 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     const createEvent = useSelector((x : { createEvent: CreateEventState }) => x.createEvent);
     const locale = useSelector((x: { i18n: I18nState }) => x.i18n.locale);
     const dispatch = useDispatch();    
-    const [editorMode, setEditorMode] = useState('none');
-    const [calendarDate, setCalendarDate] = useState(new Date());
+    const [isEditorVisible, setEditorVisible] = useState(false);
 
     const dateService = new DateService(locale, createEvent.dateOnly);
 
@@ -28,8 +27,8 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     };
 
     let date = (isEdit ? createEvent.dates.find(x => x.id === editDateId)?.date : createEvent.newDate) ?? ''
-
     const isDateValid = dateService.isValid(date)
+    const [calendarDate, setCalendarDate] = useState(isDateValid ? dateService.parse(date).toJSDate() : new Date());
     const dateFilledInAndInvalid = date && !isDateValid
     const dateClasses = ['form-control', 'flex-grow-1', dateFilledInAndInvalid ? 'is-invalid' : ''];
 
@@ -44,9 +43,11 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     const dispatchAddDate = () => {
         //Increment by one day or 30 minutes depending on dateonly so you can just keep hitting add and get something that could be useful
         let parsedDate = dateService.parse(date);
-        let dateAfter = dateService.formatDateForEdit(parsedDate.plus(createEvent.dateOnly ? { days: 1 } : { minutes: 30 }))
-        dispatch(setNewDate(dateAfter));
+        let dateAfter = parsedDate.plus(createEvent.dateOnly ? { days: 1 } : { minutes: 30 });
+        let dateAfterFormatted = dateService.formatDateForEdit(dateAfter);
+        dispatch(setNewDate(dateAfterFormatted));
         dispatch(addDate(date));
+        setCalendarDate(dateAfter.toJSDate());
     }
 
     const onDateAction = () => {
@@ -71,18 +72,12 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
     const onDateChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTheDate(e.target.value)
     };
-
-    const onToggleClock = (e: React.SyntheticEvent) => {
+    
+    const onToggleEditor = (e: React.SyntheticEvent) => {
         e?.preventDefault();
-        setEditorMode(editorMode === 'clock' ? 'none' : 'clock');
-    };
-
-    const onToggleCalendar = (e: React.SyntheticEvent) => {
-        e?.preventDefault();
-        let isShow = editorMode !== 'calendar'
-        setEditorMode(isShow ? 'calendar' : 'none');
-        if(isShow) {            
-            setCalendarDate(isDateValid ? dateService.parse(date).toJSDate() : new Date())
+        setEditorVisible(!isEditorVisible);
+        if(!isEditorVisible) {
+            setCalendarDate(isDateValid ? dateService.parse(date).toJSDate() : new Date());
         }
     }; 
 
@@ -96,35 +91,39 @@ function SingleDateOrDateTimeEditor({isEdit, editDateId} : SingleDateOrDateTimeE
             newCalendarDate = newCalendarDate.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
             setTheDate(dateService.formatDateForEdit(newCalendarDate));
         }
-    };    
-
-    let clockButton : JSX.Element |null = createEvent.dateOnly 
-        ? null 
-        : <InputAddonButton iconType='showClock' buttonType='info' onClick={onToggleClock} />;
+    };
     
-        let editor : JSX.Element = <></>;
+    const onTimePickerTimeChanged = (newTime: TimePickerTime) => {
+        if(isDateValid) {
+            let d = dateService.parse(date);
+            d = d.set({ hour: newTime.hour, minute: newTime.minute });
+            setTheDate(dateService.formatDateForEdit(d));
+        } else {
+            let d = DateTime.now().set({ hour: newTime.hour, minute: newTime.minute, second: 0, millisecond: 0 })
+            setTheDate(dateService.formatDateForEdit(d));
+        }        
+    }
     
-    if(editorMode === 'calendar') {
+    let editor : JSX.Element = <></>;
+    
+    if(isEditorVisible) {
         editor = (
             <div className="d-flex flex-column">
-                <TimePicker />
+                {createEvent.dateOnly ? null : <TimePicker onTimeChanged={onTimePickerTimeChanged} initialDateAndTime={dateService.tryParse(date)} />}
                 <Calendar onChange={onCalendarDateChanged} value={calendarDate} locale={locale} />
             </div>
         );
-    } else if(editorMode === 'clock') {
-        
     }
 
     return (
         <>
         <div className="input-group flex-grow-1" data-testid={isEdit ? 'dateContainer' : null}>
-            <InputAddonButton iconType='showCalendar' buttonType='info' onClick={onToggleCalendar} />
-            {clockButton}
+            <InputAddonButton iconType='showCalendar' buttonType='info' onClick={onToggleEditor} />
             <input type="text" className={classes(dateClasses)} onKeyDown={onDateKeyDown}  
                 onChange={onDateChanged} value={date} data-testid={isEdit ? 'editDateInput' : 'addInput'}
                 placeholder={dateService.getDateFormat('full')} />
             <InputAddonButton iconType={isEdit ? 'removeTime' : 'addTime'} buttonType={isEdit ? 'danger' : 'primary'} 
-                testId={isEdit ? 'removeButton' : 'addButton'} onClick={e => onDateAction()} isDisabled={!isEdit && !isDateValid} />
+                testId={isEdit ? 'removeButton' : 'addButton'} onClick={_ => onDateAction()} isDisabled={!isEdit && !isDateValid} />
         </div>        
         {editor}
         </>
