@@ -1,4 +1,5 @@
 # Irudd.When
+![image](https://user-images.githubusercontent.com/445243/168457577-3b434665-0eb3-4d60-92fd-962ab857e42b.png)
 
 - Meeting scheduler app. Main focus is learning react.
 - The "production" (ish) version is here: https://when.irudd.se/
