@@ -1,8 +1,11 @@
 using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.SignalR;
+using SignalRSwaggerGen.Attributes;
+using System.Security.Cryptography;
 
 namespace Irudd.When.Api.Hubs;
 
+[SignalRHub]
 public class EventsHub : Hub
 {
     private readonly EventStore _store;
@@ -57,6 +60,35 @@ public class EventsHub : Hub
                 }
             }
         });
+    }
+
+    public async Task<ExistingEvent> CreateEvent(NewEvent newEvent)
+    {
+        var id = CreateRandomUrlSafeString(7);
+        var evt = new ExistingEvent(
+            id,
+            newEvent.Description,
+            newEvent.DateOnly,
+            newEvent.Participants,
+            newEvent.Dates,
+            new List<ParticipantDateChoice>());
+
+        await _store.SetEvent(evt);
+
+        return evt;
+    }
+
+    public async Task<ExistingEvent?> GetEvent(string id)
+    {
+        var evt = await _store.GetEvent(id);
+        return evt;
+    }
+
+    private static string CreateRandomUrlSafeString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[RandomNumberGenerator.GetInt32(s.Length)]).ToArray());
     }
 
     private static string GetGroupName(string eventId) => $@"EventUpdates_{eventId}";

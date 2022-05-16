@@ -11,6 +11,7 @@ export default class LocalStorageEventService implements IEventService {
     }    
 
     private onServerCallback: (data: { name: string, payload: any }) => void = () => {
+        
     };
 
     createNewEvent(data: CreateEventState): Promise<ExistingEvent> {
@@ -73,8 +74,9 @@ export default class LocalStorageEventService implements IEventService {
         });
     }
 
-    setServerCallback(callback: ServerCallback, store: Store): void {
+    setServerCallback(callback: ServerCallback, store: Store): Promise<void> {
         this.onServerCallback = callback;
+        return new Promise<void>(resolve => resolve());
     }
 
     private getEventFromLocalStorage(eventId: string): ExistingEvent | null {

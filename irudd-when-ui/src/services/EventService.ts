@@ -16,8 +16,7 @@ export interface IEventService {
     createNewEvent(data: CreateEventState) : Promise<ExistingEvent>;
     loadExistingEvent(eventId: string) : Promise<ExistingEvent | null>;
     setParticipantDateChoice(eventId: string, dateId: string, participantId: string, choice: Choice) : Promise<void>;
-    setServerCallback(callback: ServerCallback, store: Store) : void;
-    setServerCallback(callback: ServerCallback, store: Store) : void;
+    setServerCallback(callback: ServerCallback, store: Store) : Promise<void>;
 }
 
 let eventService : IEventService;
@@ -36,9 +35,9 @@ function getEventService() : IEventService {
     return eventService;
 }
 
-export function connectStoreToServerCallbacks(store: Store) {
+export function connectStoreToServerCallbacks(store: Store) : Promise<void> {
     let eventService = getEventService();
-    eventService.setServerCallback(data => {
+    return eventService.setServerCallback(data => {
         if(data.name === 'participantDateChoice') {
             let d : { eventId: string, participantDateChoice: ExistingEventParticipantDateChoice } = data.payload;
             let currentEvent = store.getState().currentEvent as CurrentEventState;
@@ -71,7 +70,7 @@ export default class EventService implements IEventService {
         return this.service.setParticipantDateChoice(eventId, dateId, participantId, choice);
     }
 
-    setServerCallback(callback: ServerCallback, store: Store) : void {
+    setServerCallback(callback: ServerCallback, store: Store) : Promise<void> {
         return this.service.setServerCallback(callback, store);
     }
 }

@@ -2,11 +2,14 @@ using Irudd.When.Api.Hubs;
 using Irudd.When.Api.Storage;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using SignalRSwaggerGen.Attributes;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.AddSignalRSwaggerGen();
+});
 builder.Services.AddCors(options =>
 {
     if(builder.Environment.IsDevelopment())

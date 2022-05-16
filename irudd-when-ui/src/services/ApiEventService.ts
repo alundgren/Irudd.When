@@ -20,33 +20,13 @@ export class ApiEventService implements IEventService {
     private connection: HubConnection;
     
     async createNewEvent(data: CreateEventState): Promise<ExistingEvent> {
-        let response = await window.fetch(this.getAbsoluteUrl('api/v1/create-event'), {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json;charset=UTF-8',
-            },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            throw new Error(response.statusText)
-        }
-        return (await response.json()) as ExistingEvent
+        let newEvent : ExistingEvent = await this.connection.invoke('CreateEvent', data);
+        return newEvent
     }
 
     async loadExistingEvent(eventId: string): Promise<ExistingEvent | null> {
-        let response = await window.fetch(this.getAbsoluteUrl(`api/v1/event/${eventId}`), {
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json;charset=UTF-8',
-            }
-        })
-        if (response.status === 404) {
-            return null;
-        } else if (!response.ok) {
-            throw new Error(response.statusText)
-        } else {
-            return (await response.json()) as ExistingEvent;
-        }
+        let existingEvent : ExistingEvent | null = await this.connection.invoke('GetEvent', eventId);
+        return existingEvent
     }
 
     async setParticipantDateChoice(eventId: string, dateId: string, participantId: string, choice: Choice): Promise<void> {
@@ -58,8 +38,8 @@ export class ApiEventService implements IEventService {
         await this.connection.invoke('SetParticipantDateChoice', eventId, participantChoice);
     }
 
-    setServerCallback(callback: ServerCallback, store: Store): void {
-        this.connection.start().then(_ => {
+    setServerCallback(callback: ServerCallback, store: Store): Promise<void> {
+        return this.connection.start().then(_ => {
             this.connection.on('EventUpdate', message => {
                 callback(message);
             });
