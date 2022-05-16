@@ -56,28 +56,21 @@ export function CurrentEvent() {
                     isAccepted = false
                 }
             }
-            return isAccepted ? 'fw-bold' : ''
+            return isAccepted ? 'fw-bold border border-1 border-success rounded text-success' : ''
         }
+
+        let dateTimeColumnStyle = 'd-flex justify-content-center align-items-center flex-column'
         
         let dateRow = (
             <div className="d-flex flex-grow-1 flex-row justify-content-between">
                 {event.dates.map(x => (
-                    <div style={timeColumnStyle} className={timeColumnClasses + ' ' + getEventDateStatusIndicatorClass(x)} key={"d" + x.id}>
-                        {dateService.formatForDisplay(x.date, 'dateOnly')}
+                    <div style={timeColumnStyle} className={dateTimeColumnStyle + ' ' + getEventDateStatusIndicatorClass(x) + ''} key={"d" + x.id}>
+                        <span>{dateService.formatForDisplay(x.date, 'dateOnly')}</span>
+                        {event.dateOnly ? null : <span>{dateService.formatForDisplay(x.date, 'timeOnly')}</span>}
                     </div>
                 ))}
             </div>
         );
-
-        let timeRow = !event.dateOnly ? (
-            <div className="d-flex flex-grow-1 flex-row justify-content-between">
-                {event.dates.map(x => (
-                    <div style={timeColumnStyle} className={timeColumnClasses + ' ' + getEventDateStatusIndicatorClass(x)} key={"t" + x.id}>
-                        {dateService.formatForDisplay(x.date, 'timeOnly')}
-                    </div>
-                ))}
-            </div>
-        ) : null;
 
         let onChoiceClicked = (evt : SyntheticEvent, dateId: string, participantId: string) => {
             evt?.preventDefault();
@@ -131,7 +124,6 @@ export function CurrentEvent() {
         result = (
             <div className="d-flex flex-grow-1 p-2 flex-column">
                 {dateRow}
-                {timeRow}
                 {participants}
             </div>
         );      

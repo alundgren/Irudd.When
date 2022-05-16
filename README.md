@@ -8,8 +8,8 @@
 - Support english language and standard locale based date and time formats.
 - Allow editing active events.
 - Show a preview of the event while creting where choices can be prefilled.
-- Clearer way of indicating winners/losers.
 - Finetuning buttons for the time editor
+- Make scrolling sideways when lots of options work better on small screens
 
 ## Deploy
 
