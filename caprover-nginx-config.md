@@ -1,4 +1,5 @@
 <pre>
+<%
 if (s.forceSsl) {
 %>
     server {
